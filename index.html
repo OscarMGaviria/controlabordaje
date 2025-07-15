@@ -470,10 +470,219 @@
             height: 300px;
         }
 
-        .desembarcar-button {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        .zarpar-button {
+            background: linear-gradient(135deg, #32CD32 0%, #228B22 100%);
             color: #fff;
-            border-color: #4CAF50;
+            border-color: #32CD32;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .modal-title {
+            color: #FFD700;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: #ff6b6b;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:active {
+            background: rgba(255, 107, 107, 0.2);
+            transform: scale(0.9);
+        }
+
+        .modal-body {
+            margin-bottom: 25px;
+        }
+
+        .vessel-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .vessel-info h3 {
+            color: #FFD700;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        .vessel-info p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            color: #FFD700;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .modal-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            transform: scale(1.02);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .modal-button {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+        }
+
+        .modal-button:active {
+            transform: scale(0.95);
+        }
+
+        .btn-cancel {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            border-color: #ff6b6b;
+        }
+
+        .btn-cancel:active {
+            background: #ff6b6b;
+            color: #fff;
+        }
+
+        .btn-confirm {
+            background: linear-gradient(135deg, #32CD32 0%, #228B22 100%);
+            color: #fff;
+            border-color: #32CD32;
+        }
+
+        .btn-confirm:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Summary Section */
+        .summary-section {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-title {
+            color: #FFD700;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px 0;
+            color: #fff;
+        }
+
+        .summary-item strong {
+            color: #FFD700;
         }
 
         .no-selection {
@@ -566,6 +775,12 @@
             .main-content {
                 padding: 15px 20px;
             }
+
+            .modal-content {
+                padding: 20px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
         }
 
         /* Animation for vessel updates */
@@ -602,6 +817,77 @@
 
     <!-- Haptic Feedback Indicator -->
     <div class="haptic-feedback" id="hapticFeedback"></div>
+
+    <!-- Modal para Zarpar -->
+    <div class="modal-overlay" id="zarparModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-ship"></i>
+                    Zarpar Embarcación
+                </div>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="vessel-info" id="modalVesselInfo">
+                    <h3 id="modalVesselName">Nombre de la Embarcación</h3>
+                    <p>Posición en la cola</p>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="numPersonas">
+                        <i class="fas fa-users"></i> Número de Personas
+                    </label>
+                    <input type="number" 
+                           id="numPersonas" 
+                           class="modal-input touch-target" 
+                           placeholder="Ej: 8" 
+                           min="1" 
+                           max="50">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="valorViaje">
+                        <i class="fas fa-dollar-sign"></i> Valor del Viaje
+                    </label>
+                    <input type="number" 
+                           id="valorViaje" 
+                           class="modal-input touch-target" 
+                           placeholder="Ej: 150000" 
+                           min="0" 
+                           step="1000">
+                </div>
+
+                <div class="summary-section" id="summarySection" style="display: none;">
+                    <div class="summary-title">Resumen del Zarpe</div>
+                    <div class="summary-item">
+                        <span>Personas:</span>
+                        <strong id="summaryPersonas">-</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Valor Total:</span>
+                        <strong id="summaryValor">$0</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Valor por Persona:</span>
+                        <strong id="summaryValorPersona">$0</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="modal-button btn-cancel touch-target" id="btnCancelar">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button class="modal-button btn-confirm touch-target" id="btnConfirmar" disabled>
+                    <i class="fas fa-check"></i> Confirmar Zarpe
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Login Screen -->
     <div class="login-container" id="loginContainer">
@@ -672,7 +958,7 @@
         // ===========================
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-        import { getFirestore, collection, query, where, onSnapshot, doc, updateDoc, writeBatch } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+        import { getFirestore, collection, query, where, onSnapshot, doc, updateDoc, writeBatch, addDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
         // ===========================
         // CONFIGURACIÓN DE FIREBASE
@@ -705,6 +991,20 @@
         const hapticFeedback = document.getElementById('hapticFeedback');
         const pwaInstall = document.getElementById('pwaInstall');
 
+        // Referencias del Modal
+        const zarparModal = document.getElementById('zarparModal');
+        const modalClose = document.getElementById('modalClose');
+        const modalVesselName = document.getElementById('modalVesselName');
+        const modalVesselInfo = document.getElementById('modalVesselInfo');
+        const numPersonas = document.getElementById('numPersonas');
+        const valorViaje = document.getElementById('valorViaje');
+        const summarySection = document.getElementById('summarySection');
+        const summaryPersonas = document.getElementById('summaryPersonas');
+        const summaryValor = document.getElementById('summaryValor');
+        const summaryValorPersona = document.getElementById('summaryValorPersona');
+        const btnCancelar = document.getElementById('btnCancelar');
+        const btnConfirmar = document.getElementById('btnConfirmar');
+
         // ===========================
         // VARIABLES GLOBALES
         // ===========================
@@ -712,6 +1012,8 @@
         let embarcacionesData = {};
         let unsubscribeListener = null;
         let deferredPrompt = null;
+        let currentVesselId = null;
+        let currentVesselData = null;
 
         // ===========================
         // PWA FUNCTIONALITY
@@ -884,6 +1186,60 @@
                     left: scrollLeft,
                     behavior: 'smooth'
                 });
+            }
+        }
+
+        // ===========================
+        // FUNCIONES DEL MODAL
+        // ===========================
+        function openZarparModal(vesselId, vesselData) {
+            currentVesselId = vesselId;
+            currentVesselData = vesselData;
+            
+            modalVesselName.textContent = vesselData.nombre;
+            modalVesselInfo.innerHTML = `
+                <h3>${vesselData.nombre}</h3>
+                <p>Posición ${vesselData.posicion} - ${vesselData.categoria}</p>
+            `;
+            
+            // Limpiar inputs
+            numPersonas.value = '';
+            valorViaje.value = '';
+            summarySection.style.display = 'none';
+            btnConfirmar.disabled = true;
+            
+            zarparModal.style.display = 'flex';
+            triggerHapticFeedback('medium');
+            
+            // Auto focus en el primer input
+            setTimeout(() => {
+                numPersonas.focus();
+            }, 300);
+        }
+
+        function closeZarparModal() {
+            zarparModal.style.display = 'none';
+            currentVesselId = null;
+            currentVesselData = null;
+            triggerHapticFeedback('light');
+        }
+
+        function updateSummary() {
+            const personas = parseInt(numPersonas.value) || 0;
+            const valor = parseFloat(valorViaje.value) || 0;
+            
+            if (personas > 0 && valor > 0) {
+                const valorPorPersona = valor / personas;
+                
+                summaryPersonas.textContent = personas;
+                summaryValor.textContent = `${valor.toLocaleString('es-CO')}`;
+                summaryValorPersona.textContent = `${Math.round(valorPorPersona).toLocaleString('es-CO')}`;
+                
+                summarySection.style.display = 'block';
+                btnConfirmar.disabled = false;
+            } else {
+                summarySection.style.display = 'none';
+                btnConfirmar.disabled = true;
             }
         }
 
@@ -1071,9 +1427,9 @@
                         </div>
                         
                         <div class="vessel-actions">
-                            <button class="action-button desembarcar-button touch-target" 
-                                    onclick="desembarcarVessel('${vessel.id}')">
-                                <i class="fas fa-sync-alt"></i> Desembarcar y Reorganizar
+                            <button class="action-button zarpar-button touch-target" 
+                                    onclick="openZarparModal('${vessel.id}', ${JSON.stringify(vessel).replace(/"/g, '&quot;')})">
+                                <i class="fas fa-anchor"></i> Zarpar
                             </button>
                         </div>
                     </div>
@@ -1188,84 +1544,108 @@
             }
         };
 
-        window.desembarcarVessel = async function(vesselId) {
+        window.openZarparModal = openZarparModal;
+
+        // ===========================
+        // FUNCIÓN CONFIRMAR ZARPE - SOLO PARA CONTROLZARPES
+        // ===========================
+        async function confirmarZarpe() {
+            if (!currentVesselId || !currentVesselData) {
+                triggerHapticFeedback('error');
+                return;
+            }
+
+            const personas = parseInt(numPersonas.value);
+            const valor = parseFloat(valorViaje.value);
+
+            if (!personas || !valor || personas <= 0 || valor <= 0) {
+                triggerHapticFeedback('error');
+                alert('Por favor complete todos los campos correctamente');
+                return;
+            }
+
             try {
-                if (!currentCategory) {
-                    triggerHapticFeedback('error');
-                    if (typeof showError === 'function') {
-                        showError('❌ Error de Categoría', 'No hay categoría seleccionada', 4000);
-                    }
-                    return;
-                }
-
-                console.log(`🚢 Iniciando desembarque de embarcación ${vesselId}`);
-                
-                const vesselsInCategory = embarcacionesData[currentCategory] || [];
-                if (vesselsInCategory.length === 0) {
-                    triggerHapticFeedback('error');
-                    if (typeof showWarning === 'function') {
-                        showWarning('⚠️ Sin Embarcaciones', 'No hay embarcaciones en esta categoría', 4000);
-                    }
-                    return;
-                }
-
-                const vessel = vesselsInCategory.find(v => v.id === vesselId);
-                const vesselName = vessel ? vessel.nombre : 'Embarcación';
-                
-                // Visual feedback
-                const vesselCard = document.querySelector(`[data-vessel-id="${vesselId}"]`);
-                if (vesselCard) {
-                    vesselCard.classList.add('vessel-updating');
-                }
+                btnConfirmar.disabled = true;
+                btnConfirmar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
                 
                 triggerHapticFeedback('heavy');
-                
-                if (typeof showInfo === 'function') {
-                    showInfo('🔄 Procesando', `Desembarcando ${vesselName}...`, 2000);
-                }
 
+                // Preparar datos para la colección ControlZarpes
+                const zarpeData = {
+                    fechaHora: new Date(),
+                    embarcacion: currentVesselData.nombre,
+                    posicionDesembarque: currentVesselData.posicion,
+                    cantidadPasajeros: personas,
+                    valorTotal: valor,
+                    // Campos adicionales útiles para el control
+                    categoria: currentVesselData.categoria,
+                    embarcacionId: currentVesselId,
+                    valorPorPersona: Math.round(valor / personas),
+                    administrador: auth.currentUser?.email || 'admin'
+                };
+
+                // Guardar registro del zarpe en ControlZarpes
+                await addDoc(collection(db, 'ControlZarpes'), zarpeData);
+
+                // Realizar desembarque y reorganización de embarcaciones
+                const vesselsInCategory = embarcacionesData[currentCategory] || [];
                 const turnoManager = new TurnoNautico(vesselsInCategory);
                 const desembarqueExitoso = turnoManager.desembarcar();
 
-                if (!desembarqueExitoso) {
+                if (desembarqueExitoso) {
+                    const listaActualizada = turnoManager.obtenerLista();
+                    const batch = writeBatch(db);
+                    
+                    listaActualizada.forEach(vessel => {
+                        const vesselRef = doc(db, 'embarcaciones', vessel.id);
+                        batch.update(vesselRef, {
+                            estado: vessel.estado,
+                            posicion: vessel.posicion,
+                            fechaActualizacion: new Date()
+                        });
+                    });
+
+                    await batch.commit();
+                }
+
+                triggerHapticFeedback('success');
+                
+                if (typeof showSuccess === 'function') {
+                    showSuccess('⚓ Zarpe Exitoso', 
+                            `${currentVesselData.nombre} zarpó con ${personas} personas por ${valor.toLocaleString('es-CO')}`, 
+                            5000);
+                }
+
+                closeZarparModal();
+                
+                console.log('✅ Zarpe registrado exitosamente en ControlZarpes:', zarpeData);
+
+            } catch (error) {
+                console.error('❌ Error al confirmar zarpe:', error);
+                
+                // Manejo específico de errores de Firebase
+                if (error.code === 'permission-denied') {
                     triggerHapticFeedback('error');
-                    if (typeof showWarning === 'function') {
-                        showWarning('⚠️ Desembarque No Disponible', 'No hay embarcación embarcando actualmente. Verifica los estados.', 5000);
+                    if (typeof showError === 'function') {
+                        showError('❌ Permisos Insuficientes', 
+                                'No tiene permisos para registrar zarpes en ControlZarpes. Contacte al administrador del sistema.', 
+                                8000);
                     }
                     return;
                 }
-
-                const listaActualizada = turnoManager.obtenerLista();
-                const batch = writeBatch(db);
                 
-                listaActualizada.forEach(vessel => {
-                    const vesselRef = doc(db, 'embarcaciones', vessel.id);
-                    batch.update(vesselRef, {
-                        estado: vessel.estado,
-                        posicion: vessel.posicion,
-                        fechaActualizacion: new Date()
-                    });
-                });
-
-                await batch.commit();
-                
-                triggerHapticFeedback('success');
-                
-                console.log('✅ Desembarque completado exitosamente');
-                if (typeof showSuccess === 'function') {
-                    showSuccess('✅ Desembarque Completado', `${vesselName} fue movida al final de la cola. Turnos reorganizados.`, 4000);
-                }
-                
-            } catch (error) {
-                console.error('❌ Error en desembarque:', error);
                 triggerHapticFeedback('error');
                 
                 if (typeof showError === 'function') {
-                    showError('❌ Error en Desembarque', 'Ocurrió un error al realizar el desembarque. Intenta nuevamente.', 5000);
+                    showError('❌ Error en Zarpe', 
+                            `Error: ${error.message}. Intente nuevamente.`, 
+                            5000);
                 }
+            } finally {
+                btnConfirmar.disabled = false;
+                btnConfirmar.innerHTML = '<i class="fas fa-check"></i> Confirmar Zarpe';
             }
-        };
-
+        }
         // ===========================
         // EVENT LISTENERS
         // ===========================
@@ -1279,6 +1659,34 @@
         logoutButton.addEventListener('click', () => {
             if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
                 logout();
+            }
+        });
+
+        // Modal event listeners
+        modalClose.addEventListener('click', closeZarparModal);
+        btnCancelar.addEventListener('click', closeZarparModal);
+        btnConfirmar.addEventListener('click', confirmarZarpe);
+
+        // Input event listeners para actualizar resumen
+        numPersonas.addEventListener('input', updateSummary);
+        valorViaje.addEventListener('input', updateSummary);
+
+        // Cerrar modal al hacer clic fuera
+        zarparModal.addEventListener('click', (e) => {
+            if (e.target === zarparModal) {
+                closeZarparModal();
+            }
+        });
+
+        // Prevenir cierre accidental del modal
+        document.querySelector('.modal-content').addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Tecla Escape para cerrar modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && zarparModal.style.display === 'flex') {
+                closeZarparModal();
             }
         });
 
@@ -1324,11 +1732,11 @@
         document.body.addEventListener('touchstart', (e) => {
             if (e.touches.length !== 1) return;
             const startY = e.touches[0].pageY;
-            const element = e.target;
+            let element = e.target;  // Cambio de const a let
             
             while (element && element !== document.body) {
                 if (element.scrollTop > 0) return;
-                element = element.parentElement;
+                element = element.parentElement;  // Ahora esta asignación es válida
             }
             
             if (startY <= 10) {
@@ -1394,6 +1802,9 @@
                         <i class="fas fa-mobile-alt"></i> Optimizado para móvil
                     </div>
                 `;
+                
+                // Cerrar modal si está abierto
+                closeZarparModal();
                 
                 if (typeof clearAllAlerts === 'function') {
                     clearAllAlerts();
@@ -1480,10 +1891,35 @@
         }
 
         // ===========================
+        // VALIDACIONES ADICIONALES
+        // ===========================
+        
+        // Validación de números en inputs
+        numPersonas.addEventListener('input', (e) => {
+            let value = parseInt(e.target.value);
+            if (value < 1) e.target.value = '';
+            if (value > 50) e.target.value = 50;
+        });
+
+        valorViaje.addEventListener('input', (e) => {
+            let value = parseFloat(e.target.value);
+            if (value < 0) e.target.value = '';
+            if (value > 10000000) e.target.value = 10000000; // Límite de 10 millones
+        });
+
+        // Formateo automático del valor
+        valorViaje.addEventListener('blur', (e) => {
+            const value = parseFloat(e.target.value);
+            if (value) {
+                e.target.value = Math.round(value);
+            }
+        });
+
+        // ===========================
         // INICIALIZACIÓN
         // ===========================
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🚀 Aplicación móvil de administración inicializada');
+            console.log('🚀 Aplicación móvil de administración inicializada con modal de zarpe');
             
             // iOS Safari viewport fix
             const setViewportHeight = () => {
@@ -1499,7 +1935,8 @@
             logUserAction('app_initialized', {
                 userAgent: navigator.userAgent,
                 viewport: `${window.innerWidth}x${window.innerHeight}`,
-                online: navigator.onLine
+                online: navigator.onLine,
+                features: ['zarpe_modal', 'haptic_feedback', 'pwa_support']
             });
         });
 
