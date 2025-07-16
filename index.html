@@ -351,81 +351,25 @@
         .status-embarcando { background: rgba(0, 102, 255, 0.3); color: #0066ff; }
         .status-suspendido { background: rgba(255, 68, 68, 0.3); color: #ff4444; }
 
-        .status-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .status-button {
-            padding: 15px 10px;
-            border: 2px solid;
+        /* Nuevo botón para cambiar estado */
+        .change-status-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #fff;
+            border: 2px solid #6a11cb;
             border-radius: 12px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 16px;
             transition: all 0.3s ease;
             text-align: center;
             touch-action: manipulation;
-            position: relative;
-            overflow: hidden;
+            margin-bottom: 15px;
         }
 
-        .status-button:active {
+        .change-status-button:active {
             transform: scale(0.95);
-        }
-
-        .status-button:before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: all 0.3s ease;
-        }
-
-        .status-button:active:before {
-            width: 200px;
-            height: 200px;
-        }
-
-        .btn-en-turno {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border-color: #fff;
-        }
-
-        .btn-en-turno.active {
-            background: #fff;
-            color: #000;
-        }
-
-        .btn-embarcando {
-            background: rgba(0, 102, 255, 0.2);
-            color: #0066ff;
-            border-color: #0066ff;
-        }
-
-        .btn-embarcando.active {
-            background: #0066ff;
-            color: #fff;
-        }
-
-        .btn-suspendido {
-            background: rgba(255, 68, 68, 0.2);
-            color: #ff4444;
-            border-color: #ff4444;
-            grid-column: 1 / -1;
-        }
-
-        .btn-suspendido.active {
-            background: #ff4444;
-            color: #fff;
         }
 
         .vessel-actions {
@@ -657,6 +601,117 @@
             transform: none;
         }
 
+        /* Estilos para el modal de cambio de estado */
+        .status-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px;
+            margin: 12px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+        }
+
+        .status-option:active {
+            transform: scale(0.95);
+        }
+
+        .status-option.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: rgba(100, 100, 100, 0.1);
+        }
+
+        .status-option.disabled:active {
+            transform: none;
+        }
+
+        .status-option-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-option-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .status-option-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-option-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .status-option-description {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .status-option-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #FFD700;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .status-option-radio.selected::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: #FFD700;
+            border-radius: 50%;
+        }
+
+        /* Colores específicos para cada estado */
+        .status-en-turno-option .status-option-icon {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .status-embarcando-option .status-option-icon {
+            background: rgba(0, 102, 255, 0.3);
+            color: #0066ff;
+        }
+
+        .status-suspendido-option .status-option-icon {
+            background: rgba(255, 68, 68, 0.3);
+            color: #ff4444;
+        }
+
+        .warning-message {
+            background: rgba(255, 193, 7, 0.2);
+            border: 2px solid rgba(255, 193, 7, 0.5);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #ffc107;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         /* Summary Section */
         .summary-section {
             background: rgba(255, 215, 0, 0.1);
@@ -818,6 +873,130 @@
     <!-- Haptic Feedback Indicator -->
     <div class="haptic-feedback" id="hapticFeedback"></div>
 
+    <!-- Modal para Cambiar Estado -->
+    <div class="modal-overlay" id="statusModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-cog"></i>
+                    Cambiar Estado
+                </div>
+                <button class="modal-close" id="statusModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="vessel-info" id="statusModalVesselInfo">
+                    <h3 id="statusModalVesselName">Nombre de la Embarcación</h3>
+                    <p>Posición en la cola</p>
+                </div>
+
+                <div id="statusOptions">
+                    <div class="status-option status-en-turno-option" data-status="EN TURNO">
+                        <div class="status-option-info">
+                            <div class="status-option-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="status-option-text">
+                                <div class="status-option-title">EN TURNO</div>
+                                <div class="status-option-description">Embarcación esperando su turno</div>
+                            </div>
+                        </div>
+                        <div class="status-option-radio" id="radio-en-turno"></div>
+                    </div>
+
+                    <div class="status-option status-embarcando-option" data-status="EMBARCANDO">
+                        <div class="status-option-info">
+                            <div class="status-option-icon">
+                                <i class="fas fa-ship"></i>
+                            </div>
+                            <div class="status-option-text">
+                                <div class="status-option-title">EMBARCANDO</div>
+                                <div class="status-option-description">Embarcación actualmente embarcando</div>
+                            </div>
+                        </div>
+                        <div class="status-option-radio" id="radio-embarcando"></div>
+                    </div>
+
+                    <div class="status-option status-suspendido-option" data-status="SUSPENDIDO">
+                        <div class="status-option-info">
+                            <div class="status-option-icon">
+                                <i class="fas fa-ban"></i>
+                            </div>
+                            <div class="status-option-text">
+                                <div class="status-option-title">SUSPENDIDO</div>
+                                <div class="status-option-description">Embarcación temporalmente fuera de servicio</div>
+                            </div>
+                        </div>
+                        <div class="status-option-radio" id="radio-suspendido"></div>
+                    </div>
+                </div>
+
+                <div class="warning-message" id="statusWarning" style="display: none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span id="statusWarningText"></span>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="modal-button btn-cancel touch-target" id="statusBtnCancelar">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button class="modal-button btn-confirm touch-target" id="statusBtnConfirmar" disabled>
+                    <i class="fas fa-check"></i> Cambiar Estado
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Cambiar Posición (Solo Admins) -->
+    <div class="modal-overlay" id="positionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-sort-numeric-up"></i>
+                    Cambiar Posición
+                </div>
+                <button class="modal-close" id="positionModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="vessel-info" id="positionModalVesselInfo">
+                    <h3 id="positionModalVesselName">Nombre de la Embarcación</h3>
+                    <p>Posición actual en la cola</p>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="nuevaPosicion">
+                        <i class="fas fa-hashtag"></i> Nueva Posición
+                    </label>
+                    <input type="number" 
+                           id="nuevaPosicion" 
+                           class="modal-input touch-target" 
+                           placeholder="Ej: 3" 
+                           min="1">
+                </div>
+
+                <div class="warning-message" style="background: rgba(255, 193, 7, 0.2); border-color: rgba(255, 193, 7, 0.5);">
+                    <i class="fas fa-info-circle"></i>
+                    Al cambiar la posición, las demás embarcaciones se reorganizarán automáticamente.
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="modal-button btn-cancel touch-target" id="positionBtnCancelar">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button class="modal-button btn-confirm touch-target" id="positionBtnConfirmar" disabled>
+                    <i class="fas fa-check"></i> Cambiar Posición
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal para Zarpar -->
     <div class="modal-overlay" id="zarparModal">
         <div class="modal-content">
@@ -958,7 +1137,7 @@
         // ===========================
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-        import { getFirestore, collection, query, where, onSnapshot, doc, updateDoc, writeBatch, addDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+        import { getFirestore, collection, query, where, onSnapshot, doc, updateDoc, writeBatch, addDoc, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
         // ===========================
         // CONFIGURACIÓN DE FIREBASE
@@ -991,7 +1170,27 @@
         const hapticFeedback = document.getElementById('hapticFeedback');
         const pwaInstall = document.getElementById('pwaInstall');
 
-        // Referencias del Modal
+        // Referencias del Modal de Posición (Solo Admins)
+        const positionModal = document.getElementById('positionModal');
+        const positionModalClose = document.getElementById('positionModalClose');
+        const positionModalVesselName = document.getElementById('positionModalVesselName');
+        const positionModalVesselInfo = document.getElementById('positionModalVesselInfo');
+        const nuevaPosicion = document.getElementById('nuevaPosicion');
+        const positionBtnCancelar = document.getElementById('positionBtnCancelar');
+        const positionBtnConfirmar = document.getElementById('positionBtnConfirmar');
+
+        // Referencias del Modal de Estado
+        const statusModal = document.getElementById('statusModal');
+        const statusModalClose = document.getElementById('statusModalClose');
+        const statusModalVesselName = document.getElementById('statusModalVesselName');
+        const statusModalVesselInfo = document.getElementById('statusModalVesselInfo');
+        const statusOptions = document.getElementById('statusOptions');
+        const statusWarning = document.getElementById('statusWarning');
+        const statusWarningText = document.getElementById('statusWarningText');
+        const statusBtnCancelar = document.getElementById('statusBtnCancelar');
+        const statusBtnConfirmar = document.getElementById('statusBtnConfirmar');
+
+        // Referencias del Modal de Zarpar
         const zarparModal = document.getElementById('zarparModal');
         const modalClose = document.getElementById('modalClose');
         const modalVesselName = document.getElementById('modalVesselName');
@@ -1014,6 +1213,8 @@
         let deferredPrompt = null;
         let currentVesselId = null;
         let currentVesselData = null;
+        let selectedStatus = null;
+        let userRole = 'operador'; // Por defecto operador
 
         // ===========================
         // PWA FUNCTIONALITY
@@ -1143,6 +1344,21 @@
                 return true;
             }
 
+            // Validar si se puede cambiar a embarcando consecutivamente
+            puedeEmbarcar(posicion) {
+                // Encontrar todas las embarcaciones que están embarcando
+                const embarcando = this.lista.filter(e => e.estado === "EMBARCANDO").map(e => e.posicion).sort((a, b) => a - b);
+                
+                if (embarcando.length === 0) {
+                    // Si no hay ninguna embarcando, solo la posición 1 puede embarcar
+                    return posicion === 1;
+                }
+
+                // Verificar que sea consecutiva
+                const ultimaEmbarcando = Math.max(...embarcando);
+                return posicion === ultimaEmbarcando + 1;
+            }
+
             reasignarPosiciones() {
                 this.lista.forEach((e, i) => e.posicion = i + 1);
             }
@@ -1190,7 +1406,116 @@
         }
 
         // ===========================
-        // FUNCIONES DEL MODAL
+        // FUNCIONES DEL MODAL DE ESTADO
+        // ===========================
+        function openStatusModal(vesselId, vesselData) {
+            currentVesselId = vesselId;
+            currentVesselData = vesselData;
+            selectedStatus = vesselData.estado;
+            
+            statusModalVesselName.textContent = vesselData.nombre;
+            statusModalVesselInfo.innerHTML = `
+                <h3>${vesselData.nombre}</h3>
+                <p>Posición ${vesselData.posicion} - ${vesselData.categoria}</p>
+            `;
+            
+            // Configurar las opciones de estado
+            setupStatusOptions();
+            
+            // Seleccionar el estado actual
+            updateStatusSelection(vesselData.estado);
+            
+            statusModal.style.display = 'flex';
+            triggerHapticFeedback('medium');
+        }
+
+        function closeStatusModal() {
+            statusModal.style.display = 'none';
+            currentVesselId = null;
+            currentVesselData = null;
+            selectedStatus = null;
+            statusWarning.style.display = 'none';
+            triggerHapticFeedback('light');
+        }
+
+        function setupStatusOptions() {
+            const vesselsInCategory = embarcacionesData[currentCategory] || [];
+            const turnoManager = new TurnoNautico(vesselsInCategory);
+            
+            // Limpiar selecciones previas
+            document.querySelectorAll('.status-option-radio').forEach(radio => {
+                radio.classList.remove('selected');
+            });
+
+            // Obtener referencias a las opciones
+            const enTurnoOption = document.querySelector('[data-status="EN TURNO"]');
+            const embarcandoOption = document.querySelector('[data-status="EMBARCANDO"]');
+            const suspendidoOption = document.querySelector('[data-status="SUSPENDIDO"]');
+
+            // Resetear estados
+            [enTurnoOption, embarcandoOption, suspendidoOption].forEach(option => {
+                option.classList.remove('disabled');
+            });
+
+            // Si es ADMINISTRADOR - Sin restricciones
+            if (userRole === 'admin') {
+                hideStatusWarning();
+                return; // Salir sin aplicar restricciones
+            }
+
+            // Si es OPERADOR - Aplicar restricciones existentes
+            const esPrimeroSuspendido = currentVesselData.posicion === 1 && currentVesselData.estado === 'SUSPENDIDO';
+            const puedeEmbarcar = turnoManager.puedeEmbarcar(currentVesselData.posicion);
+
+            // Aplicar restricciones para primero suspendido
+            if (esPrimeroSuspendido) {
+                embarcandoOption.classList.add('disabled');
+                suspendidoOption.classList.add('disabled');
+                showStatusWarning('Esta embarcación está en posición 1 y suspendida. Solo puede cambiar a "EN TURNO".');
+            }
+            // Aplicar restricciones para embarcando consecutivo
+            else if (!puedeEmbarcar && currentVesselData.estado !== 'EMBARCANDO') {
+                embarcandoOption.classList.add('disabled');
+                const embarcando = vesselsInCategory.filter(e => e.estado === "EMBARCANDO").map(e => e.posicion).sort((a, b) => a - b);
+                if (embarcando.length > 0) {
+                    const ultimaEmbarcando = Math.max(...embarcando);
+                    showStatusWarning(`Solo las embarcaciones en orden consecutivo pueden embarcar. La próxima posición disponible es ${ultimaEmbarcando + 1}.`);
+                } else {
+                    showStatusWarning('Solo la embarcación en posición 1 puede comenzar a embarcar.');
+                }
+            } else {
+                hideStatusWarning();
+            }
+        }
+
+        function updateStatusSelection(status) {
+            // Limpiar selecciones previas
+            document.querySelectorAll('.status-option-radio').forEach(radio => {
+                radio.classList.remove('selected');
+            });
+
+            // Seleccionar el estado correspondiente
+            const radioId = `radio-${status.toLowerCase().replace(' ', '-')}`;
+            const radio = document.getElementById(radioId);
+            if (radio) {
+                radio.classList.add('selected');
+            }
+
+            selectedStatus = status;
+            statusBtnConfirmar.disabled = status === currentVesselData.estado;
+        }
+
+        function showStatusWarning(message) {
+            statusWarningText.textContent = message;
+            statusWarning.style.display = 'flex';
+        }
+
+        function hideStatusWarning() {
+            statusWarning.style.display = 'none';
+        }
+
+        // ===========================
+        // FUNCIONES DEL MODAL DE ZARPAR
         // ===========================
         function openZarparModal(vesselId, vesselData) {
             currentVesselId = vesselId;
@@ -1244,8 +1569,37 @@
         }
 
         // ===========================
-        // FUNCIONES DE AUTENTICACIÓN
+        // FUNCIONES DE AUTENTICACIÓN Y ROLES
         // ===========================
+        async function getUserRole(userEmail) {
+            try {
+                console.log('🔍 Buscando rol para:', userEmail);
+                const userQuery = query(
+                    collection(db, 'users'), 
+                    where('email', '==', userEmail)
+                );
+                const snapshot = await getDocs(userQuery);
+                
+                if (!snapshot.empty) {
+                    const userData = snapshot.docs[0].data();
+                    console.log('✅ Rol encontrado:', userData.rol);
+                    return userData.rol || 'operador';
+                }
+                
+                console.log('⚠️ Usuario no encontrado en colección, rol por defecto: operador');
+                return 'operador';
+            } catch (error) {
+                console.error('❌ Error al obtener rol:', error);
+                return 'operador'; // Rol seguro por defecto
+            }
+        }
+
+        function updateHeaderWithRole() {
+            const headerText = document.querySelector('.header-text');
+            const roleIcon = userRole === 'admin' ? '🔐' : '👤';
+            const roleText = userRole === 'admin' ? 'Administrador' : 'Operador';
+            headerText.innerHTML = `Admin Embarcaciones <span style="font-size: 12px; opacity: 0.8;">${roleIcon} ${roleText}</span>`;
+        }
         async function login(email, password) {
             try {
                 showLoading();
@@ -1347,6 +1701,229 @@
         // ===========================
         // FUNCIONES DE VISUALIZACIÓN
         // ===========================
+        
+        // ===========================
+        // FUNCIONES DEL MODAL DE POSICIÓN (Solo Admins)
+        // ===========================
+        function openPositionModal(vesselId, vesselData) {
+            if (userRole !== 'admin') {
+                triggerHapticFeedback('error');
+                return;
+            }
+
+            currentVesselId = vesselId;
+            currentVesselData = vesselData;
+            
+            positionModalVesselName.textContent = vesselData.nombre;
+            positionModalVesselInfo.innerHTML = `
+                <h3>${vesselData.nombre}</h3>
+                <p>Posición actual: ${vesselData.posicion} - ${vesselData.categoria}</p>
+            `;
+            
+            // Limpiar input y establecer valor actual
+            nuevaPosicion.value = vesselData.posicion;
+            nuevaPosicion.placeholder = `Actual: ${vesselData.posicion}`;
+            
+            // Establecer límites según categoría
+            const vesselsInCategory = embarcacionesData[currentCategory] || [];
+            nuevaPosicion.max = vesselsInCategory.length;
+            
+            positionBtnConfirmar.disabled = true;
+            
+            positionModal.style.display = 'flex';
+            triggerHapticFeedback('medium');
+            
+            // Auto focus en el input
+            setTimeout(() => {
+                nuevaPosicion.select();
+            }, 300);
+        }
+
+        function closePositionModal() {
+            positionModal.style.display = 'none';
+            currentVesselId = null;
+            currentVesselData = null;
+            triggerHapticFeedback('light');
+        }
+
+        function updatePositionButton() {
+            const nuevaPos = parseInt(nuevaPosicion.value);
+            const posicionActual = currentVesselData ? currentVesselData.posicion : 0;
+            
+            // Habilitar botón solo si la posición es diferente y válida
+            positionBtnConfirmar.disabled = !nuevaPos || nuevaPos === posicionActual || nuevaPos < 1;
+        }
+
+        // Función para cambiar posición (solo admins)
+        async function cambiarPosicion() {
+            if (userRole !== 'admin' || !currentVesselId || !currentVesselData) {
+                triggerHapticFeedback('error');
+                return;
+            }
+
+            const nuevaPos = parseInt(nuevaPosicion.value);
+            const vesselsInCategory = embarcacionesData[currentCategory] || [];
+            
+            if (!nuevaPos || nuevaPos < 1 || nuevaPos > vesselsInCategory.length) {
+                triggerHapticFeedback('error');
+                alert(`La posición debe estar entre 1 y ${vesselsInCategory.length}`);
+                return;
+            }
+
+            if (nuevaPos === currentVesselData.posicion) {
+                triggerHapticFeedback('error');
+                alert('La embarcación ya está en esa posición');
+                return;
+            }
+
+            try {
+                positionBtnConfirmar.disabled = true;
+                positionBtnConfirmar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Reorganizando...';
+                
+                triggerHapticFeedback('heavy');
+
+                // Crear copia de la lista para reorganizar
+                let listaReorganizada = [...vesselsInCategory];
+                
+                // Encontrar la embarcación a mover
+                const vesselIndex = listaReorganizada.findIndex(v => v.id === currentVesselId);
+                const vessel = listaReorganizada[vesselIndex];
+                
+                // Remover la embarcación de su posición actual
+                listaReorganizada.splice(vesselIndex, 1);
+                
+                // Insertar en la nueva posición (nueva posición - 1 porque el array es 0-indexed)
+                listaReorganizada.splice(nuevaPos - 1, 0, vessel);
+                
+                // Reasignar todas las posiciones
+                listaReorganizada.forEach((v, index) => {
+                    v.posicion = index + 1;
+                });
+
+                // Actualizar todas las embarcaciones en batch
+                const batch = writeBatch(db);
+                
+                listaReorganizada.forEach(vesselUpdate => {
+                    const vesselRef = doc(db, 'embarcaciones', vesselUpdate.id);
+                    batch.update(vesselRef, {
+                        posicion: vesselUpdate.posicion,
+                        fechaActualizacion: new Date()
+                    });
+                });
+
+                await batch.commit();
+                
+                triggerHapticFeedback('success');
+                
+                if (typeof showSuccess === 'function') {
+                    showSuccess('✅ Posición Cambiada', 
+                            `${currentVesselData.nombre} movida a la posición ${nuevaPos}. Cola reorganizada.`, 
+                            5000);
+                }
+
+                closePositionModal();
+                
+                console.log('✅ Posición cambiada exitosamente');
+
+            } catch (error) {
+                console.error('❌ Error al cambiar posición:', error);
+                triggerHapticFeedback('error');
+                
+                if (typeof showError === 'function') {
+                    showError('❌ Error al Cambiar Posición', 
+                            'No se pudo cambiar la posición. Intenta nuevamente.', 
+                            5000);
+                }
+            } finally {
+                positionBtnConfirmar.disabled = false;
+                positionBtnConfirmar.innerHTML = '<i class="fas fa-check"></i> Cambiar Posición';
+            }
+        }
+
+        // Función para desembarcar (solo admins)
+        async function desembarcarVessel(vesselId) {
+            if (userRole !== 'admin') {
+                triggerHapticFeedback('error');
+                if (typeof showError === 'function') {
+                    showError('❌ Sin Permisos', 'Solo los administradores pueden desembarcar embarcaciones.', 4000);
+                }
+                return;
+            }
+
+            try {
+                console.log(`🚢 Desembarcando ${vesselId}`);
+                
+                const vesselsInCategory = embarcacionesData[currentCategory] || [];
+                const vessel = vesselsInCategory.find(v => v.id === vesselId);
+                
+                if (!vessel) {
+                    triggerHapticFeedback('error');
+                    if (typeof showError === 'function') {
+                        showError('❌ Error', 'Embarcación no encontrada', 4000);
+                    }
+                    return;
+                }
+
+                // Confirmar acción
+                const confirmMessage = `¿Confirmas desembarcar "${vessel.nombre}"?\n\nEsto moverá la embarcación al final de la cola y reorganizará las posiciones.`;
+                if (!confirm(confirmMessage)) {
+                    return;
+                }
+
+                triggerHapticFeedback('heavy');
+
+                // Usar lógica de desembarque
+                const turnoManager = new TurnoNautico(vesselsInCategory);
+                const desembarqueExitoso = turnoManager.desembarcar();
+
+                if (desembarqueExitoso) {
+                    const listaActualizada = turnoManager.obtenerLista();
+                    const batch = writeBatch(db);
+                    
+                    listaActualizada.forEach(vesselUpdate => {
+                        const vesselRef = doc(db, 'embarcaciones', vesselUpdate.id);
+                        batch.update(vesselRef, {
+                            estado: vesselUpdate.estado,
+                            posicion: vesselUpdate.posicion,
+                            fechaActualizacion: new Date()
+                        });
+                    });
+
+                    await batch.commit();
+                    
+                    triggerHapticFeedback('success');
+                    
+                    if (typeof showSuccess === 'function') {
+                        showSuccess('🚢 Desembarque Exitoso', `${vessel.nombre} ha sido desembarcada y enviada al final de la cola.`, 5000);
+                    }
+                    
+                    console.log('✅ Desembarque completado');
+                } else {
+                    triggerHapticFeedback('error');
+                    if (typeof showError === 'function') {
+                        showError('❌ Error de Desembarque', 'No se pudo realizar el desembarque.', 4000);
+                    }
+                }
+                
+            } catch (error) {
+                console.error('❌ Error al desembarcar:', error);
+                triggerHapticFeedback('error');
+                
+                if (typeof showError === 'function') {
+                    showError('❌ Error de Desembarque', 'No se pudo desembarcar la embarcación. Intenta nuevamente.', 5000);
+                }
+            }
+        }
+
+        // Exposer función globalmente
+        window.desembarcarVessel = desembarcarVessel;
+        
+        // Exposer funciones globalmente ANTES de displayVessels
+        window.openStatusModal = openStatusModal;
+        window.openZarparModal = openZarparModal;
+        window.openPositionModal = openPositionModal;
+        window.updateVesselStatus = updateVesselStatus;
+        
         function displayVessels(categoria) {
             const categoryNames = {
                 'lancha-taxi': '<i class="fas fa-ship"></i> Lancha Taxi',
@@ -1382,9 +1959,6 @@
 
                 const config = statusConfig[vessel.estado] || { icon: 'fas fa-question', emoji: '❓' };
                 
-                // Determinar si se pueden cambiar todos los estados o solo a "EN TURNO"
-                const esPrimeroSuspendido = vessel.posicion === 1 && vessel.estado === 'SUSPENDIDO';
-                
                 html += `
                     <div class="vessel-card" data-vessel-id="${vessel.id}">
                         <div class="vessel-header">
@@ -1396,41 +1970,33 @@
                             <div class="current-status status-${statusClass}">
                                 <i class="${config.icon}"></i> ${vessel.estado}
                             </div>
-                            ${esPrimeroSuspendido ? 
-                                '<div style="font-size: 12px; color: #FFD700; margin-top: 5px;"><i class="fas fa-info-circle"></i> Solo puede cambiar a "EN TURNO"</div>' : 
-                                ''
-                            }
                         </div>
                         
-                        <div class="status-buttons">
-                            <button class="status-button btn-en-turno touch-target ${vessel.estado === 'EN TURNO' ? 'active' : ''}" 
-                                    onclick="updateVesselStatus('${vessel.id}', 'EN TURNO')">
-                                <i class="fas fa-clock"></i> EN TURNO
-                            </button>
-                            ${!esPrimeroSuspendido ? `
-                                <button class="status-button btn-embarcando touch-target ${vessel.estado === 'EMBARCANDO' ? 'active' : ''}" 
-                                        onclick="updateVesselStatus('${vessel.id}', 'EMBARCANDO')">
-                                    <i class="fas fa-ship"></i> EMBARCANDO
-                                </button>
-                                <button class="status-button btn-suspendido touch-target ${vessel.estado === 'SUSPENDIDO' ? 'active' : ''}" 
-                                        onclick="updateVesselStatus('${vessel.id}', 'SUSPENDIDO')">
-                                    <i class="fas fa-ban"></i> SUSPENDIDO
-                                </button>
-                            ` : `
-                                <button class="status-button btn-embarcando touch-target" disabled style="opacity: 0.3;">
-                                    <i class="fas fa-ship"></i> EMBARCANDO
-                                </button>
-                                <button class="status-button btn-suspendido touch-target active" disabled style="opacity: 0.6;">
-                                    <i class="fas fa-ban"></i> SUSPENDIDO
-                                </button>
-                            `}
-                        </div>
+                        <button class="change-status-button touch-target" 
+                                onclick="openStatusModal('${vessel.id}', ${JSON.stringify(vessel).replace(/"/g, '&quot;')})">
+                            <i class="fas fa-edit"></i> Cambiar Estado
+                        </button>
                         
                         <div class="vessel-actions">
-                            <button class="action-button zarpar-button touch-target" 
-                                    onclick="openZarparModal('${vessel.id}', ${JSON.stringify(vessel).replace(/"/g, '&quot;')})">
-                                <i class="fas fa-anchor"></i> Zarpar
-                            </button>
+                            ${vessel.estado === 'EMBARCANDO' ? `
+                                <button class="action-button zarpar-button touch-target" 
+                                        onclick="openZarparModal('${vessel.id}', ${JSON.stringify(vessel).replace(/"/g, '&quot;')})">
+                                    <i class="fas fa-anchor"></i> Zarpar
+                                </button>
+                            ` : `
+                                <button class="action-button touch-target" 
+                                        style="background: rgba(100, 100, 100, 0.3); border-color: #666; color: #999; cursor: not-allowed;" 
+                                        disabled>
+                                    <i class="fas fa-anchor"></i> Solo Embarcando Puede Zarpar
+                                </button>
+                            `}
+                            ${userRole === 'admin' ? `
+                                <button class="action-button touch-target" 
+                                        style="background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); border-color: #ff6b35;" 
+                                        onclick="openPositionModal('${vessel.id}', ${JSON.stringify(vessel).replace(/"/g, '&quot;')})">
+                                    <i class="fas fa-sort-numeric-up"></i> Cambiar Posición
+                                </button>
+                            ` : ''}
                         </div>
                     </div>
                 `;
@@ -1442,7 +2008,7 @@
         // ===========================
         // FUNCIONES DE ACTUALIZACIÓN
         // ===========================
-        window.updateVesselStatus = async function(vesselId, newStatus) {
+        async function updateVesselStatus(vesselId, newStatus) {
             try {
                 console.log(`🔄 Actualizando ${vesselId} a ${newStatus}`);
                 
@@ -1506,6 +2072,29 @@
                     return;
                 }
 
+                // Validación para estado EMBARCANDO - debe ser consecutivo (SOLO PARA OPERADORES)
+                if (newStatus === 'EMBARCANDO' && userRole !== 'admin') {
+                    const turnoManager = new TurnoNautico(vesselsInCategory);
+                    if (!turnoManager.puedeEmbarcar(vessel.posicion)) {
+                        triggerHapticFeedback('error');
+                        
+                        const embarcando = vesselsInCategory.filter(e => e.estado === "EMBARCANDO").map(e => e.posicion).sort((a, b) => a - b);
+                        let mensaje = '';
+                        
+                        if (embarcando.length === 0) {
+                            mensaje = 'Solo la embarcación en posición 1 puede comenzar a embarcar.';
+                        } else {
+                            const ultimaEmbarcando = Math.max(...embarcando);
+                            mensaje = `Las embarcaciones deben embarcar en orden consecutivo. La próxima posición disponible es ${ultimaEmbarcando + 1}.`;
+                        }
+                        
+                        if (typeof showError === 'function') {
+                            showError('❌ Error de Orden', mensaje, 5000);
+                        }
+                        return;
+                    }
+                }
+
                 // Lógica normal para otros casos
                 // Visual feedback
                 const vesselCard = document.querySelector(`[data-vessel-id="${vesselId}"]`);
@@ -1542,12 +2131,33 @@
                     showError('❌ Error de Actualización', 'No se pudo actualizar el estado. Intenta nuevamente.', 5000);
                 }
             }
-        };
+        }
 
-        window.openZarparModal = openZarparModal;
+        // Función para confirmar cambio de estado desde el modal
+        async function confirmarCambioEstado() {
+            if (!currentVesselId || !currentVesselData || !selectedStatus) {
+                triggerHapticFeedback('error');
+                return;
+            }
+
+            try {
+                statusBtnConfirmar.disabled = true;
+                statusBtnConfirmar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Actualizando...';
+                
+                await updateVesselStatus(currentVesselId, selectedStatus);
+                closeStatusModal();
+                
+            } catch (error) {
+                console.error('❌ Error al confirmar cambio de estado:', error);
+                triggerHapticFeedback('error');
+            } finally {
+                statusBtnConfirmar.disabled = false;
+                statusBtnConfirmar.innerHTML = '<i class="fas fa-check"></i> Cambiar Estado';
+            }
+        }
 
         // ===========================
-        // FUNCIÓN CONFIRMAR ZARPE - SOLO PARA CONTROLZARPES
+        // FUNCIÓN CONFIRMAR ZARPE
         // ===========================
         async function confirmarZarpe() {
             if (!currentVesselId || !currentVesselData) {
@@ -1577,7 +2187,6 @@
                     posicionDesembarque: currentVesselData.posicion,
                     cantidadPasajeros: personas,
                     valorTotal: valor,
-                    // Campos adicionales útiles para el control
                     categoria: currentVesselData.categoria,
                     embarcacionId: currentVesselId,
                     valorPorPersona: Math.round(valor / personas),
@@ -1623,7 +2232,6 @@
             } catch (error) {
                 console.error('❌ Error al confirmar zarpe:', error);
                 
-                // Manejo específico de errores de Firebase
                 if (error.code === 'permission-denied') {
                     triggerHapticFeedback('error');
                     if (typeof showError === 'function') {
@@ -1646,6 +2254,7 @@
                 btnConfirmar.innerHTML = '<i class="fas fa-check"></i> Confirmar Zarpe';
             }
         }
+
         // ===========================
         // EVENT LISTENERS
         // ===========================
@@ -1662,7 +2271,37 @@
             }
         });
 
-        // Modal event listeners
+        // Modal de Posición event listeners (Solo Admins)
+        positionModalClose.addEventListener('click', closePositionModal);
+        positionBtnCancelar.addEventListener('click', closePositionModal);
+        positionBtnConfirmar.addEventListener('click', cambiarPosicion);
+
+        // Input event listener para habilitar/deshabilitar botón
+        nuevaPosicion.addEventListener('input', updatePositionButton);
+
+        // Modal de Estado event listeners
+        statusModalClose.addEventListener('click', closeStatusModal);
+        statusBtnCancelar.addEventListener('click', closeStatusModal);
+        statusBtnConfirmar.addEventListener('click', confirmarCambioEstado);
+
+        // Event listeners para opciones de estado
+        statusOptions.addEventListener('click', (e) => {
+            const option = e.target.closest('.status-option');
+            
+            if (option) {
+                // Verificar si la opción está deshabilitada
+                if (option.classList.contains('disabled')) {
+                    triggerHapticFeedback('error');
+                    return;
+                }
+                
+                const status = option.getAttribute('data-status');
+                updateStatusSelection(status);
+                triggerHapticFeedback('light');
+            }
+        });
+
+        // Modal de Zarpar event listeners
         modalClose.addEventListener('click', closeZarparModal);
         btnCancelar.addEventListener('click', closeZarparModal);
         btnConfirmar.addEventListener('click', confirmarZarpe);
@@ -1671,22 +2310,42 @@
         numPersonas.addEventListener('input', updateSummary);
         valorViaje.addEventListener('input', updateSummary);
 
-        // Cerrar modal al hacer clic fuera
+        // Cerrar modales al hacer clic fuera
+        statusModal.addEventListener('click', (e) => {
+            if (e.target === statusModal) {
+                closeStatusModal();
+            }
+        });
+
+        positionModal.addEventListener('click', (e) => {
+            if (e.target === positionModal) {
+                closePositionModal();
+            }
+        });
+
         zarparModal.addEventListener('click', (e) => {
             if (e.target === zarparModal) {
                 closeZarparModal();
             }
         });
 
-        // Prevenir cierre accidental del modal
-        document.querySelector('.modal-content').addEventListener('click', (e) => {
-            e.stopPropagation();
+        // Prevenir cierre accidental de modales
+        document.querySelectorAll('.modal-content').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
         });
 
-        // Tecla Escape para cerrar modal
+        // Tecla Escape para cerrar modales
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && zarparModal.style.display === 'flex') {
-                closeZarparModal();
+            if (e.key === 'Escape') {
+                if (statusModal.style.display === 'flex') {
+                    closeStatusModal();
+                } else if (positionModal.style.display === 'flex') {
+                    closePositionModal();
+                } else if (zarparModal.style.display === 'flex') {
+                    closeZarparModal();
+                }
             }
         });
 
@@ -1732,11 +2391,11 @@
         document.body.addEventListener('touchstart', (e) => {
             if (e.touches.length !== 1) return;
             const startY = e.touches[0].pageY;
-            let element = e.target;  // Cambio de const a let
+            let element = e.target;
             
             while (element && element !== document.body) {
                 if (element.scrollTop > 0) return;
-                element = element.parentElement;  // Ahora esta asignación es válida
+                element = element.parentElement;
             }
             
             if (startY <= 10) {
@@ -1762,17 +2421,51 @@
         }, {passive: false});
 
         // ===========================
+        // VALIDACIONES ADICIONALES
+        // ===========================
+        
+        // Validación de números en inputs
+        numPersonas.addEventListener('input', (e) => {
+            let value = parseInt(e.target.value);
+            if (value < 1) e.target.value = '';
+            if (value > 50) e.target.value = 50;
+        });
+
+        valorViaje.addEventListener('input', (e) => {
+            let value = parseFloat(e.target.value);
+            if (value < 0) e.target.value = '';
+            if (value > 10000000) e.target.value = 10000000;
+        });
+
+        // Formateo automático del valor
+        valorViaje.addEventListener('blur', (e) => {
+            const value = parseFloat(e.target.value);
+            if (value) {
+                e.target.value = Math.round(value);
+            }
+        });
+
+        // ===========================
         // OBSERVER DE AUTENTICACIÓN
         // ===========================
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 console.log('✅ Usuario autenticado:', user.email);
+                
+                // Obtener rol del usuario
+                userRole = await getUserRole(user.email);
+                console.log('🔐 Rol asignado:', userRole);
+                
+                // Actualizar UI con rol
+                updateHeaderWithRole();
+                
                 loginContainer.style.display = 'none';
                 adminContainer.style.display = 'flex';
                 setupFirebaseListener();
                 
                 if (typeof showSuccess === 'function') {
-                    showSuccess('✅ Sesión Iniciada', `Bienvenido ${user.email}`, 3000);
+                    const roleText = userRole === 'admin' ? 'Administrador' : 'Operador';
+                    showSuccess('✅ Sesión Iniciada', `Bienvenido ${roleText}: ${user.email}`, 4000);
                 }
                 
                 triggerHapticFeedback('success');
@@ -1803,8 +2496,10 @@
                     </div>
                 `;
                 
-                // Cerrar modal si está abierto
+                // Cerrar modales si están abiertos
                 closeZarparModal();
+                closeStatusModal();
+                closePositionModal();
                 
                 if (typeof clearAllAlerts === 'function') {
                     clearAllAlerts();
@@ -1860,22 +2555,6 @@
         }
 
         // ===========================
-        // PERFORMANCE MONITORING
-        // ===========================
-        function measurePerformance(operationName, startTime) {
-            const endTime = performance.now();
-            const duration = endTime - startTime;
-            console.log(`⏱️ ${operationName}: ${duration.toFixed(2)}ms`);
-            
-            // Si la operación toma más de 2 segundos, mostrar feedback
-            if (duration > 2000) {
-                if (typeof showWarning === 'function') {
-                    showWarning('⚠️ Operación Lenta', 'La operación tomó más tiempo del esperado. Verifica tu conexión.', 4000);
-                }
-            }
-        }
-
-        // ===========================
         // DEBUGGING Y LOGS
         // ===========================
         function logUserAction(action, details = {}) {
@@ -1891,35 +2570,10 @@
         }
 
         // ===========================
-        // VALIDACIONES ADICIONALES
-        // ===========================
-        
-        // Validación de números en inputs
-        numPersonas.addEventListener('input', (e) => {
-            let value = parseInt(e.target.value);
-            if (value < 1) e.target.value = '';
-            if (value > 50) e.target.value = 50;
-        });
-
-        valorViaje.addEventListener('input', (e) => {
-            let value = parseFloat(e.target.value);
-            if (value < 0) e.target.value = '';
-            if (value > 10000000) e.target.value = 10000000; // Límite de 10 millones
-        });
-
-        // Formateo automático del valor
-        valorViaje.addEventListener('blur', (e) => {
-            const value = parseFloat(e.target.value);
-            if (value) {
-                e.target.value = Math.round(value);
-            }
-        });
-
-        // ===========================
         // INICIALIZACIÓN
         // ===========================
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🚀 Aplicación móvil de administración inicializada con modal de zarpe');
+            console.log('🚀 Aplicación móvil de administración inicializada con modales mejorados');
             
             // iOS Safari viewport fix
             const setViewportHeight = () => {
@@ -1936,7 +2590,7 @@
                 userAgent: navigator.userAgent,
                 viewport: `${window.innerWidth}x${window.innerHeight}`,
                 online: navigator.onLine,
-                features: ['zarpe_modal', 'haptic_feedback', 'pwa_support']
+                features: ['status_modal', 'zarpe_modal', 'consecutive_boarding', 'haptic_feedback', 'pwa_support']
             });
         });
 
