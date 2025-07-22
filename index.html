@@ -1110,6 +1110,8 @@
                 <button class="tab-button touch-target" data-category="carguero"><i class="fas fa-shipping-fast"></i> Carguero</button>
                 <button class="tab-button touch-target" data-category="barco"><i class="fas fa-sailboat"></i> Barco</button>
                 <button class="tab-button touch-target" data-category="yate"><i class="fas fa-yacht"></i> Yate</button>
+                <button class="tab-button touch-target" data-category="verificar"><i class="fas fa-id-card"></i> Verificar Reserva</button>
+
             </div>
         </div>
 
@@ -1925,6 +1927,17 @@
         window.updateVesselStatus = updateVesselStatus;
         
         function displayVessels(categoria) {
+            if (categoria === 'verificar') {
+                vesselsTitle.innerHTML = `<i class="fas fa-id-card"></i> Verificar Reserva`;
+                vesselsContent.innerHTML = `
+                    <div style="padding: 20px;">
+                        <input type="text" id="docReserva" class="modal-input touch-target" placeholder="Ingrese número de documento">
+                        <button class="login-button touch-target" onclick="verificarReserva()">Buscar Reserva</button>
+                        <div id="resultadoReserva" style="margin-top: 15px; color: #FFD700;"></div>
+                    </div>
+                `;
+                return;
+            }
             const categoryNames = {
                 'lancha-taxi': '<i class="fas fa-ship"></i> Lancha Taxi',
                 'deportiva': '<i class="fas fa-water"></i> Deportiva',
@@ -2593,6 +2606,114 @@
                 features: ['status_modal', 'zarpe_modal', 'consecutive_boarding', 'haptic_feedback', 'pwa_support']
             });
         });
+
+
+
+        async function verificarReserva() {
+            const docInput = document.getElementById('docReserva');
+            const resultado = document.getElementById('resultadoReserva');
+            const docValue = docInput.value.trim();
+
+            resultado.innerHTML = '';
+            if (!docValue || isNaN(docValue)) {
+                resultado.innerHTML = `
+                    <div class="warning-message">
+                        <i class="fas fa-exclamation-triangle"></i> Ingrese un número de documento válido.
+                    </div>`;
+                return;
+            }
+
+            try {
+                const ahora = new Date();
+                const inicioDelDia = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate(), 0, 0, 0);
+                const finDelDia = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate(), 23, 59, 59);
+
+                const reservasRef = collection(db, "Reservas");
+                const q = query(
+                    reservasRef,
+                    where("DOCUMENTO", "==", Number(docValue)),
+                    where("fecha_hora_salida", ">=", inicioDelDia),
+                    where("fecha_hora_salida", "<=", finDelDia)
+                );
+
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    resultado.innerHTML = `
+                        <div class="warning-message">
+                            <i class="fas fa-times-circle"></i> No se encontró una reserva para hoy con este documento.
+                        </div>`;
+                    return;
+                }
+
+                const reserva = querySnapshot.docs[0];
+                const data = reserva.data();
+
+                let contenido = `
+                    <div class="summary-section">
+                        <div class="summary-title"><i class="fas fa-clipboard-check"></i> Reserva Encontrada</div>
+                        <div class="summary-item"><span><i class="fas fa-user"></i> Nombre:</span><strong>${data.NOMBRE}</strong></div>
+                        <div class="summary-item"><span><i class="fas fa-ship"></i> Embarcación:</span><strong>${data.EMPRESA}</strong></div>
+                        <div class="summary-item"><span><i class="fas fa-users"></i> Pasajeros:</span><strong>${data.PASAJEROS}</strong></div>
+                        <div class="summary-item"><span><i class="fas fa-clock"></i> Salida:</span><strong>${data.fecha_hora_salida.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong></div>
+                    </div>
+                `;
+
+                if (data.usado === true) {
+                    contenido += `
+                        <div class="warning-message">
+                            <i class="fas fa-ban"></i> Esta reserva <strong>ya fue usada</strong>.
+                        </div>`;
+                } else {
+                    contenido += `
+                        <button class="login-button touch-target" onclick="actualizarEstadoReserva('${reserva.id}')">
+                            <i class="fas fa-check-circle"></i> Usar Reserva
+                        </button>`;
+                }
+
+                resultado.innerHTML = contenido;
+            } catch (error) {
+                console.error('Error consultando reservas:', error);
+                resultado.innerHTML = `
+                    <div class="warning-message">
+                        <i class="fas fa-exclamation-circle"></i> Ocurrió un error al consultar la reserva. Intente nuevamente.
+                    </div>`;
+            }
+        }
+
+
+
+
+        window.verificarReserva = verificarReserva;
+
+        async function actualizarEstadoReserva(reservaId) {
+            const resultado = document.getElementById('resultadoReserva');
+
+            try {
+                const reservaRef = doc(db, "Reservas", reservaId);
+                await updateDoc(reservaRef, { usado: true });
+
+                resultado.innerHTML = `
+                    <div class="warning-message">
+                        <i class="fas fa-check-circle"></i> La reserva fue marcada como <strong>usada</strong> correctamente.
+                    </div>`;
+
+                // Recargar detalles para actualizar la vista
+                setTimeout(() => verificarReserva(), 1000);
+            } catch (error) {
+                console.error("Error al actualizar reserva:", error);
+                resultado.innerHTML = `
+                    <div class="warning-message">
+                        <i class="fas fa-exclamation-circle"></i> No se pudo marcar la reserva como usada. Intente nuevamente.
+                    </div>`;
+            }
+        }
+
+        window.actualizarEstadoReserva = actualizarEstadoReserva;
+
+
+
+
 
     </script>
 </body>
