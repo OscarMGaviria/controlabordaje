@@ -28,43 +28,34 @@ function generateWhatsAppMessage(zarpeData) {
     const operadorFormateado = operador.split('@')[0]; // Solo la parte antes del @
 
     const emojis = {
-        detalles: String.fromCodePoint(0x1F4CB),
-        embarcacion: String.fromCodePoint(0x1F6E5),
-        posicion: String.fromCodePoint(0x1F4CD),
-        categoria: String.fromCodePoint(0x1F3F7),
-        grupo: String.fromCodePoint(0x1F468, 0x200D, 0x1F469, 0x200D, 0x1F467, 0x200D, 0x1F466),
-        personas: String.fromCodePoint(0x1F465),
-        total: String.fromCodePoint(0x1F4B0),
-        porPersona: String.fromCodePoint(0x1F4B5),
-        infoZarpe: String.fromCodePoint(0x1F4C5),
-        fecha: String.fromCodePoint(0x1F4C6),
-        hora: String.fromCodePoint(0x1F550),
-        operador: String.fromCodePoint(0x1F468, 0x200D, 0x2708, 0xFE0F),
-        ok: String.fromCodePoint(0x2705),
-        sistema: String.fromCodePoint(0x1F4F2),
+        detalles: "📋",
+        embarcacion: "🛥️",
+        posicion: "📍",
+        categoria: "🏷️",
+        grupo: "👨‍👩‍👧‍👦",
+        personas: "👥",
+        total: "💰",
+        porPersona: "💵",
+        infoZarpe: "📅",
+        fecha: "📆",
+        hora: "🕐",
+        operador: "👨‍✈️",
+        ok: "✅",
+        sistema: "📲",
     };
 
 
     // Mensaje base
-    let mensaje = `*ZARPE CONFIRMADO*
-
-        ${emojis.detalles} *DETALLES DEL VIAJE*
-        ━━━━━━━━━━━━━━━━━━━━━━━
-
+    let mensaje = `*ZARPE CONFIRMADO*\n
+        ${emojis.detalles} *DETALLES DEL VIAJE*\n━━━━━━━━━━━━━━━━━━━━━━━\n
         ${emojis.embarcacion} *Embarcación:* ${zarpeData.embarcacion}
         ${emojis.posicion} *Posición:* ${zarpeData.posicionDesembarque}
-        ${emojis.categoria} *Categoría:* ${zarpeData.categoria}
-
-        ${emojis.grupo} *INFORMACIÓN DE PASAJEROS*
-        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+        ${emojis.categoria} *Categoría:* ${zarpeData.categoria}\n
+        ${emojis.grupo} *INFORMACIÓN DE PASAJEROS*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n
         ${emojis.personas} *Pasajeros:* ${zarpeData.cantidadPasajeros} personas
         ${emojis.total} *Valor Total:* $${zarpeData.valorTotal.toLocaleString('es-CO')} COP
-        ${emojis.porPersona} *Valor por Persona:* $${zarpeData.valorPorPersona.toLocaleString('es-CO')} COP
-
-        ${emojis.infoZarpe} *INFORMACIÓN DEL ZARPE*
-        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+        ${emojis.porPersona} *Valor por Persona:* $${zarpeData.valorPorPersona.toLocaleString('es-CO')} COP\n
+        ${emojis.infoZarpe} *INFORMACIÓN DEL ZARPE*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n
         ${emojis.fecha} *Fecha:* ${fechaFormateada}
         ${emojis.hora} *Hora:* ${horaFormateada}
         ${emojis.operador} *Operador:* ${operadorFormateado}`;
@@ -72,7 +63,8 @@ function generateWhatsAppMessage(zarpeData) {
     if (zarpeData.statusInfo) {
         mensaje += `\n\n *NOTA:* ${zarpeData.statusInfo}`;
     } else {
-        mensaje += `\n\n${emojis.ok} *Zarpe registrado exitosamente en el sistema*`;
+        mensaje += `\n\n───\n${emojis.sistema} _Mensaje generado automáticamente por Admin Embarcaciones_`;
+
     }
 
     mensaje += `\n\n---
@@ -88,36 +80,34 @@ function generateWhatsAppMessage(zarpeData) {
  */
 function openWhatsApp(phoneNumber, message) {
     const encodedMessage = encodeURIComponent(message);
-    let whatsappUrl;
-    
-    if (phoneNumber && phoneNumber.trim() !== '') {
-        // Limpiar el número de teléfono
-        const cleanPhone = phoneNumber.replace(/[^\d]/g, '');
-        whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
-    } else {
-        // Sin número específico, abre WhatsApp Web para seleccionar contacto
-        whatsappUrl = `https://web.whatsapp.com/send?text=${encodedMessage}`;
-    }
-    
-    // Detectar si es móvil para usar la app nativa
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
-    if (isMobile && phoneNumber && phoneNumber.trim() !== '') {
-        // En móvil, usar whatsapp:// para abrir la app nativa
-        const cleanPhone = phoneNumber.replace(/[^\d]/g, '');
-        const nativeUrl = `whatsapp://send?phone=${cleanPhone}&text=${encodedMessage}`;
 
+    let nativeUrl;
+    let webUrl;
+
+    if (phoneNumber && phoneNumber.trim() !== '') {
+        const cleanPhone = phoneNumber.replace(/[^\d]/g, '');
+        nativeUrl = `whatsapp://send?phone=${cleanPhone}&text=${encodedMessage}`;
+        webUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+    } else {
+        nativeUrl = `whatsapp://send?text=${encodedMessage}`;
+        webUrl = `https://wa.me/?text=${encodedMessage}`;
+    }
+
+    if (isMobile) {
+        // Intentar abrir la app de WhatsApp
         window.location.href = nativeUrl;
 
-        // Fallback a WhatsApp Web en caso de que no funcione (opcional)
+        // Fallback: abrir WhatsApp Web si no se abre la app
         setTimeout(() => {
-            window.open(whatsappUrl, '_blank');
+            window.open(webUrl, '_blank');
         }, 2000);
     } else {
-        // En desktop o sin número, usar WhatsApp Web
-        window.open(whatsappUrl, '_blank');
+        // En desktop, solo WhatsApp Web
+        window.open(webUrl, '_blank');
     }
 }
+
 
 /**
  * Muestra el modal de compartir WhatsApp
