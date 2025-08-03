@@ -273,6 +273,12 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+
+.message-preview {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 120px;
+  overflow-y: auto
+}
 /* Mejoras de accesibilidad */
 .whatsapp-share-button:focus,
 .phone-input input:focus {
@@ -292,5 +298,7 @@
   
   .message-preview {
     border-left-width: 6px;
+    max-height: 45px;
+    height: 45px;
   }
 }
