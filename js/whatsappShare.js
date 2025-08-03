@@ -87,19 +87,15 @@ function openWhatsApp(phoneNumber, message) {
     
     if (isMobile && phoneNumber && phoneNumber.trim() !== '') {
         // En móvil, usar whatsapp:// para abrir la app nativa
-        const nativeUrl = `whatsapp://send?phone=${phoneNumber.replace(/[^\d]/g, '')}&text=${encodedMessage}`;
-        
-        // Intentar abrir la app nativa primero
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = nativeUrl;
-        document.body.appendChild(iframe);
-        
-        // Fallback a WhatsApp Web después de un breve delay
+        const cleanPhone = phoneNumber.replace(/[^\d]/g, '');
+        const nativeUrl = `whatsapp://send?phone=${cleanPhone}&text=${encodedMessage}`;
+
+        window.location.href = nativeUrl;
+
+        // Fallback a WhatsApp Web en caso de que no funcione (opcional)
         setTimeout(() => {
-            document.body.removeChild(iframe);
             window.open(whatsappUrl, '_blank');
-        }, 1000);
+        }, 2000);
     } else {
         // En desktop o sin número, usar WhatsApp Web
         window.open(whatsappUrl, '_blank');
@@ -374,4 +370,5 @@ export function addConnectionStatus(zarpeData, hasConnectionIssues = false) {
         };
     }
     return zarpeData;
+
 }
