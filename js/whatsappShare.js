@@ -27,39 +27,56 @@ function generateWhatsAppMessage(zarpeData) {
     const operador = zarpeData.administrador || auth.currentUser?.email || 'Sistema';
     const operadorFormateado = operador.split('@')[0]; // Solo la parte antes del @
 
+    const emojis = {
+        detalles: String.fromCodePoint(0x1F4CB),
+        embarcacion: String.fromCodePoint(0x1F6E5),
+        posicion: String.fromCodePoint(0x1F4CD),
+        categoria: String.fromCodePoint(0x1F3F7),
+        grupo: String.fromCodePoint(0x1F468, 0x200D, 0x1F469, 0x200D, 0x1F467, 0x200D, 0x1F466),
+        personas: String.fromCodePoint(0x1F465),
+        total: String.fromCodePoint(0x1F4B0),
+        porPersona: String.fromCodePoint(0x1F4B5),
+        infoZarpe: String.fromCodePoint(0x1F4C5),
+        fecha: String.fromCodePoint(0x1F4C6),
+        hora: String.fromCodePoint(0x1F550),
+        operador: String.fromCodePoint(0x1F468, 0x200D, 0x2708, 0xFE0F),
+        ok: String.fromCodePoint(0x2705),
+        sistema: String.fromCodePoint(0x1F4F2),
+    };
+
+
     // Mensaje base
-    let mensaje = `🚢 *ZARPE CONFIRMADO* 🚢
+    let mensaje = `*ZARPE CONFIRMADO*
 
-📋 *DETALLES DEL VIAJE*
-━━━━━━━━━━━━━━━━━━━━━━━
+        ${emojis.detalles} *DETALLES DEL VIAJE*
+        ━━━━━━━━━━━━━━━━━━━━━━━
 
-🛥️ *Embarcación:* ${zarpeData.embarcacion}
-📊 *Posición:* ${zarpeData.posicionDesembarque}
-🏷️ *Categoría:* ${zarpeData.categoria}
+        ${emojis.embarcacion} *Embarcación:* ${zarpeData.embarcacion}
+        ${emojis.posicion} *Posición:* ${zarpeData.posicionDesembarque}
+        ${emojis.categoria} *Categoría:* ${zarpeData.categoria}
 
-👥 *INFORMACIÓN DE PASAJEROS*
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        ${emojis.grupo} *INFORMACIÓN DE PASAJEROS*
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-👤 *Pasajeros:* ${zarpeData.cantidadPasajeros} personas
-💰 *Valor Total:* $${zarpeData.valorTotal.toLocaleString('es-CO')} COP
-💵 *Valor por Persona:* $${zarpeData.valorPorPersona.toLocaleString('es-CO')} COP
+        ${emojis.personas} *Pasajeros:* ${zarpeData.cantidadPasajeros} personas
+        ${emojis.total} *Valor Total:* $${zarpeData.valorTotal.toLocaleString('es-CO')} COP
+        ${emojis.porPersona} *Valor por Persona:* $${zarpeData.valorPorPersona.toLocaleString('es-CO')} COP
 
-📅 *INFORMACIÓN DEL ZARPE*
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        ${emojis.infoZarpe} *INFORMACIÓN DEL ZARPE*
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📆 *Fecha:* ${fechaFormateada}
-🕐 *Hora:* ${horaFormateada}
-👨‍💼 *Operador:* ${operadorFormateado}`;
-
+        ${emojis.fecha} *Fecha:* ${fechaFormateada}
+        ${emojis.hora} *Hora:* ${horaFormateada}
+        ${emojis.operador} *Operador:* ${operadorFormateado}`;
     // Agregar información de status si existe
     if (zarpeData.statusInfo) {
-        mensaje += `\n\n${zarpeData.statusInfo}`;
+        mensaje += `\n\n *NOTA:* ${zarpeData.statusInfo}`;
     } else {
-        mensaje += `\n\n✅ *Zarpe registrado exitosamente en el sistema*`;
+        mensaje += `\n\n${emojis.ok} *Zarpe registrado exitosamente en el sistema*`;
     }
 
     mensaje += `\n\n---
-_Mensaje generado automáticamente por Admin Embarcaciones_`;
+    ${emojis.sistema} _Mensaje generado automáticamente por Admin Embarcaciones_`;
 
     return mensaje;
 }
@@ -370,5 +387,4 @@ export function addConnectionStatus(zarpeData, hasConnectionIssues = false) {
         };
     }
     return zarpeData;
-
 }
