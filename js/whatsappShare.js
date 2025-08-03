@@ -129,7 +129,7 @@ export function showWhatsAppShareModal(zarpeData) {
             <div class="modal-header">
                 <div class="modal-title" style="color: ${statusColor};">
                     <i class="fab fa-whatsapp"></i>
-                    Compartir por WhatsApp
+                    WhatsApp
                 </div>
                 <button class="modal-close" id="whatsappModalClose">
                     <i class="fas fa-times"></i>
@@ -172,11 +172,6 @@ export function showWhatsAppShareModal(zarpeData) {
                     <div class="message-preview">
                         <pre id="messagePreview">${message}</pre>
                     </div>
-                </div>
-
-                <div class="whatsapp-status ${statusClass}">
-                    <i class="fab fa-whatsapp"></i>
-                    <span>Se abrirá ${isMobile() ? 'la app de WhatsApp' : 'WhatsApp Web'} con el mensaje pre-cargado</span>
                 </div>
             </div>
 
