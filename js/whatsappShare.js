@@ -10,6 +10,8 @@ import { auth } from './firebaseConfig.js';
  * @param {Object} zarpeData - Datos del zarpe
  * @returns {string} Mensaje formateado
  */
+
+
 function generateWhatsAppMessage(zarpeData) {
     const fecha = new Date(zarpeData.fechaHora);
     const fechaFormateada = fecha.toLocaleDateString('es-CO', {
@@ -25,53 +27,31 @@ function generateWhatsAppMessage(zarpeData) {
     });
 
     const operador = zarpeData.administrador || auth.currentUser?.email || 'Sistema';
-    const operadorFormateado = operador.split('@')[0]; // Solo la parte antes del @
+    const operadorFormateado = operador.split('@')[0];
 
-    const emojis = {
-        detalles: "📋",
-        embarcacion: "🛥️",
-        posicion: "📍",
-        categoria: "🏷️",
-        grupo: "👨‍👩‍👧‍👦",
-        personas: "👥",
-        total: "💰",
-        porPersona: "💵",
-        infoZarpe: "📅",
-        fecha: "📆",
-        hora: "🕐",
-        operador: "👨‍✈️",
-        ok: "✅",
-        sistema: "📲",
-    };
+    let mensaje = `*ZARPE CONFIRMADO*\n`;
+    mensaje += `*DETALLES DEL VIAJE*\n------------------------------\n`;
+    mensaje += `*Embarcación:* ${zarpeData.embarcacion}\n`;
+    mensaje += `*Posición:* ${zarpeData.posicionDesembarque}\n`;
+    mensaje += `*Categoría:* ${zarpeData.categoria}\n`;
+    mensaje += `*INFORMACIÓN DE PASAJEROS*\n------------------------------\n`;
+    mensaje += `*Pasajeros:* ${zarpeData.cantidadPasajeros} personas\n`;
+    mensaje += `*Valor Total:* $${zarpeData.valorTotal.toLocaleString('es-CO')} COP\n`;
+    mensaje += `*Valor por Persona:* $${zarpeData.valorPorPersona.toLocaleString('es-CO')} COP\n`;
+    mensaje += `*INFORMACIÓN DEL ZARPE*\n------------------------------\n`;
+    mensaje += `*Fecha:* ${fechaFormateada}\n`;
+    mensaje += `*Hora:* ${horaFormateada}\n`;
+    mensaje += `*Operador:* ${operadorFormateado}\n`;
 
-
-    // Mensaje base
-    let mensaje = `*ZARPE CONFIRMADO*\n
-        ${emojis.detalles} *DETALLES DEL VIAJE*\n━━━━━━━━━━━━━━━━━━━━━━━\n
-        ${emojis.embarcacion} *Embarcación:* ${zarpeData.embarcacion}
-        ${emojis.posicion} *Posición:* ${zarpeData.posicionDesembarque}
-        ${emojis.categoria} *Categoría:* ${zarpeData.categoria}\n
-        ${emojis.grupo} *INFORMACIÓN DE PASAJEROS*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n
-        ${emojis.personas} *Pasajeros:* ${zarpeData.cantidadPasajeros} personas
-        ${emojis.total} *Valor Total:* $${zarpeData.valorTotal.toLocaleString('es-CO')} COP
-        ${emojis.porPersona} *Valor por Persona:* $${zarpeData.valorPorPersona.toLocaleString('es-CO')} COP\n
-        ${emojis.infoZarpe} *INFORMACIÓN DEL ZARPE*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n
-        ${emojis.fecha} *Fecha:* ${fechaFormateada}
-        ${emojis.hora} *Hora:* ${horaFormateada}
-        ${emojis.operador} *Operador:* ${operadorFormateado}`;
-    // Agregar información de status si existe
     if (zarpeData.statusInfo) {
-        mensaje += `\n\n *NOTA:* ${zarpeData.statusInfo}`;
-    } else {
-        mensaje += `\n\n───\n${emojis.sistema} _Mensaje generado automáticamente por Admin Embarcaciones_`;
-
+        mensaje += `\n*NOTA:* ${zarpeData.statusInfo}`;
     }
 
-    mensaje += `\n\n---
-    ${emojis.sistema} _Mensaje generado automáticamente por Admin Embarcaciones_`;
+    mensaje += `\n---\nMensaje generado automáticamente por Admin Embarcaciones`;
 
     return mensaje;
 }
+
 
 /**
  * Abre WhatsApp Web o la app con el mensaje pre-cargado
@@ -82,31 +62,31 @@ function openWhatsApp(phoneNumber, message) {
     const encodedMessage = encodeURIComponent(message);
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-    let nativeUrl;
-    let webUrl;
+    let nativeUrl, fallbackUrl;
 
     if (phoneNumber && phoneNumber.trim() !== '') {
         const cleanPhone = phoneNumber.replace(/[^\d]/g, '');
         nativeUrl = `whatsapp://send?phone=${cleanPhone}&text=${encodedMessage}`;
-        webUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+        fallbackUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
     } else {
         nativeUrl = `whatsapp://send?text=${encodedMessage}`;
-        webUrl = `https://wa.me/?text=${encodedMessage}`;
+        fallbackUrl = `https://wa.me/?text=${encodedMessage}`;
     }
 
     if (isMobile) {
-        // Intentar abrir la app de WhatsApp
+        // Abrir app de WhatsApp
         window.location.href = nativeUrl;
 
-        // Fallback: abrir WhatsApp Web si no se abre la app
+        // Fallback a WhatsApp Web si no abre
         setTimeout(() => {
-            window.open(webUrl, '_blank');
+            window.open(fallbackUrl, '_blank');
         }, 2000);
     } else {
-        // En desktop, solo WhatsApp Web
-        window.open(webUrl, '_blank');
+        // Desktop: solo WhatsApp Web
+        window.open(fallbackUrl, '_blank');
     }
 }
+
 
 
 /**
