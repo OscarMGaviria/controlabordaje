@@ -23,6 +23,7 @@ import {
     volverBusqueda
 } from './reservasVentas.js';
 import { showWhatsAppShareModal, isWhatsAppAvailable } from './whatsappShare.js';
+import { showPDFOptionsModal, isPDFSupported } from './pdfTicket.js';
 import { triggerHapticFeedback } from './utils/haptics.js';
 import { auth } from './firebaseConfig.js';
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
@@ -327,6 +328,22 @@ function setupEventListeners() {
         }
     });
 
+    // **NUEVO: Custom event para PDF**
+    window.addEventListener('showPDFModal', (e) => {
+        const { zarpeData } = e.detail;
+        if (isPDFSupported()) {
+            showPDFOptionsModal(zarpeData);
+        } else {
+            window.dispatchEvent(new CustomEvent('showError', {
+                detail: {
+                    title: '❌ PDF No Compatible',
+                    message: 'Tu navegador no soporta la generación de PDFs.',
+                    duration: 4000
+                }
+            }));
+        }
+    });
+
     // Custom events para alertas (si existe el sistema de alertas)
     window.addEventListener('showSuccess', (e) => {
         const { title, message, duration } = e.detail;
@@ -522,3 +539,6 @@ window.volverBusqueda = volverBusqueda;
 // **NUEVAS FUNCIONES GLOBALES PARA WHATSAPP**
 window.showWhatsAppShareModal = showWhatsAppShareModal;
 window.isWhatsAppAvailable = isWhatsAppAvailable;
+// **NUEVAS FUNCIONES GLOBALES PARA PDF**
+window.showPDFOptionsModal = showPDFOptionsModal;
+window.isPDFSupported = isPDFSupported;

@@ -3,6 +3,7 @@ import { db, auth } from './firebaseConfig.js';
 import { doc, updateDoc, writeBatch, addDoc, collection } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import { TurnoNautico } from './turnoNautico.js';
 import { showWhatsAppShareModal, isWhatsAppAvailable } from './whatsappShare.js';
+import { showPDFOptionsModal } from './pdfTicket.js';
 
 let currentVesselId = null;
 let currentVesselData = null;
@@ -299,13 +300,19 @@ function showZarpeSuccessWithWhatsApp(zarpeData, status = 'success', message = '
                 </div>
             </div>
 
-            <div class="modal-actions">
+            <div class="modal-actions" style="flex-direction: column; gap: 10px;">
+                <div style="display: flex; gap: 10px;">
+                    <button class="modal-button touch-target" id="zarpeResultPDF" 
+                            style="background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); color: #fff; border-color: #ff6b35; flex: 1;">
+                        <i class="fas fa-file-pdf"></i> PDF
+                    </button>
+                    <button class="modal-button touch-target" id="zarpeResultWhatsApp" 
+                            style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: #fff; border-color: #25D366; flex: 1;">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </button>
+                </div>
                 <button class="modal-button btn-cancel touch-target" id="zarpeResultContinuar">
                     <i class="fas fa-check"></i> Continuar
-                </button>
-                <button class="modal-button touch-target" id="zarpeResultWhatsApp" 
-                        style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: #fff; border-color: #25D366;">
-                    <i class="fab fa-whatsapp"></i> Compartir WhatsApp
                 </button>
             </div>
         </div>
@@ -333,6 +340,19 @@ function showZarpeSuccessWithWhatsApp(zarpeData, status = 'success', message = '
         };
         
         showWhatsAppShareModal(zarpeDataForWhatsApp);
+    });
+
+    // Generar PDF
+    document.getElementById('zarpeResultPDF').addEventListener('click', () => {
+        closeModal();
+        
+        // Agregar información de status al zarpe data para PDF
+        const zarpeDataForPDF = {
+            ...zarpeData,
+            statusInfo: status === 'error' ? 'Información generada localmente debido a problemas de conexión.' : ''
+        };
+        
+        showPDFOptionsModal(zarpeDataForPDF);
     });
     
     // Cerrar modal al hacer clic fuera

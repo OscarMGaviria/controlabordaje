@@ -1,5 +1,5 @@
 /* ===========================
-   ESTILOS ESPECÍFICOS PARA WHATSAPP
+   ESTILOS ESPECÍFICOS PARA WHATSAPP MEJORADOS
    ===========================*/
 
 /* Iconos de WhatsApp */
@@ -33,6 +33,21 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.whatsapp-share-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.3s ease;
 }
 
 .whatsapp-share-button:hover {
@@ -45,32 +60,73 @@
   transform: scale(0.95);
 }
 
+.whatsapp-share-button:active::before {
+  width: 300px;
+  height: 300px;
+}
+
 .whatsapp-share-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
+  background: rgba(37, 211, 102, 0.3);
 }
 
 .whatsapp-share-button i {
   font-size: 18px;
+  z-index: 1;
+  position: relative;
 }
 
-/* Previsualización del mensaje */
+/* Previsualización del mensaje mejorada */
 .message-preview {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.3);
   padding: 15px;
   border-radius: 12px;
   margin-top: 10px;
   border-left: 4px solid #25D366;
+  max-height: 150px;
+  overflow-y: auto;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.message-preview::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #25D366, #128C7E);
+  border-radius: 12px 12px 0 0;
 }
 
 .message-preview pre {
   white-space: pre-wrap;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', 'San Francisco', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 13px;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.95);
   margin: 0;
+}
+
+.message-preview::-webkit-scrollbar {
+  width: 6px;
+}
+
+.message-preview::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.message-preview::-webkit-scrollbar-thumb {
+  background: #25D366;
+  border-radius: 3px;
+}
+
+.message-preview::-webkit-scrollbar-thumb:hover {
+  background: #128C7E;
 }
 
 /* Input de teléfono mejorado */
@@ -84,49 +140,70 @@
   left: 15px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 20px;
-  z-index: 1;
+  font-size: 18px;
+  z-index: 2;
+  pointer-events: none;
 }
 
 .phone-input input {
   padding-left: 50px !important;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.5px;
+}
+
+.phone-input input:focus::before {
+  transform: translateY(-50%) scale(1.1);
 }
 
 /* Indicador de WhatsApp disponible */
 .whatsapp-indicator {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   background: rgba(37, 211, 102, 0.1);
   color: #25D366;
-  padding: 6px 12px;
+  padding: 8px 15px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: bold;
   border: 1px solid rgba(37, 211, 102, 0.3);
+  animation: whatsappPulseSubtle 3s ease-in-out infinite;
 }
 
 .whatsapp-indicator.mobile::after {
   content: "📱";
+  margin-left: 4px;
 }
 
 .whatsapp-indicator.desktop::after {
   content: "💻";
+  margin-left: 4px;
+}
+
+@keyframes whatsappPulseSubtle {
+  0%, 100% { 
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 0 5px rgba(37, 211, 102, 0);
+  }
 }
 
 /* Animación de loading específica para WhatsApp */
 .whatsapp-loading {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  font-weight: 600;
+  position: relative;
 }
 
 .whatsapp-loading::after {
   content: "";
-  width: 16px;
-  height: 16px;
-  border: 2px solid transparent;
-  border-top: 2px solid #25D366;
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid #fff;
   border-radius: 50%;
   animation: whatsappSpin 1s linear infinite;
 }
@@ -134,6 +211,83 @@
 @keyframes whatsappSpin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Instrucciones de WhatsApp */
+.whatsapp-instructions {
+  background: rgba(37, 211, 102, 0.1);
+  border: 1px solid rgba(37, 211, 102, 0.3);
+  border-radius: 12px;
+  padding: 15px;
+  margin-top: 15px;
+  font-size: 13px;
+  line-height: 1.5;
+  position: relative;
+  overflow: hidden;
+}
+
+.whatsapp-instructions::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: #25D366;
+}
+
+.whatsapp-instructions strong {
+  color: #25D366;
+  font-weight: 700;
+}
+
+.whatsapp-instructions div {
+  margin-left: 15px;
+}
+
+/* Estados de conexión WhatsApp */
+.whatsapp-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 10px 0;
+  transition: all 0.3s ease;
+}
+
+.whatsapp-status.success {
+  background: rgba(37, 211, 102, 0.15);
+  color: #25D366;
+  border: 1px solid rgba(37, 211, 102, 0.3);
+  animation: successPulse 0.6s ease-out;
+}
+
+.whatsapp-status.error {
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff6b6b;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  animation: errorShake 0.5s ease-out;
+}
+
+.whatsapp-status.info {
+  background: rgba(23, 162, 184, 0.15);
+  color: #17a2b8;
+  border: 1px solid rgba(23, 162, 184, 0.3);
+}
+
+@keyframes successPulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes errorShake {
+  0%, 20%, 50%, 80%, 100% { transform: translateX(0); }
+  10%, 30%, 70%, 90% { transform: translateX(-5px); }
+  40%, 60% { transform: translateX(5px); }
 }
 
 /* Estilos para el modal de éxito con WhatsApp */
@@ -170,52 +324,22 @@
   z-index: 1000;
   transition: all 0.3s ease;
   text-decoration: none;
+  animation: whatsappFloat 3s ease-in-out infinite;
 }
 
 .whatsapp-float:hover {
   transform: scale(1.1);
   box-shadow: 0 12px 30px rgba(37, 211, 102, 0.4);
+  animation: none;
 }
 
 .whatsapp-float:active {
   transform: scale(0.95);
 }
 
-/* Responsive adjustments */
-@media (max-width: 480px) {
-  .message-preview {
-    padding: 12px;
-  }
-  
-  .message-preview pre {
-    font-size: 12px;
-  }
-  
-  .whatsapp-share-button {
-    padding: 18px 16px;
-    font-size: 14px;
-  }
-  
-  .phone-input input {
-    padding-left: 45px !important;
-  }
-  
-  .phone-input::before {
-    left: 12px;
-    font-size: 18px;
-  }
-}
-
-/* Dark mode improvements para WhatsApp */
-@media (prefers-color-scheme: dark) {
-  .message-preview {
-    background: rgba(0, 0, 0, 0.4);
-    border-left-color: #25D366;
-  }
-  
-  .whatsapp-indicator {
-    background: rgba(37, 211, 102, 0.15);
-  }
+@keyframes whatsappFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
 }
 
 /* Animación de pulso para elementos de WhatsApp */
@@ -228,40 +352,150 @@
     box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
   }
   70% {
-    box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
+    box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
   }
   100% {
     box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
   }
 }
 
-/* Estilos para mensajes de estado de WhatsApp */
-.whatsapp-status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 15px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
+/* Efectos de hover mejorados */
+.whatsapp-share-button:hover .whatsapp-loading::after {
+  border-top-color: rgba(255, 255, 255, 0.8);
 }
 
-.whatsapp-status.success {
-  background: rgba(37, 211, 102, 0.1);
-  color: #25D366;
-  border: 1px solid rgba(37, 211, 102, 0.3);
+/* Responsive adjustments mejorados */
+@media (max-width: 480px) {
+  .message-preview {
+    padding: 12px;
+    max-height: 120px;
+    font-size: 12px;
+  }
+  
+  .message-preview pre {
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  
+  .whatsapp-share-button {
+    padding: 18px 16px;
+    font-size: 14px;
+    gap: 8px;
+  }
+  
+  .phone-input input {
+    padding-left: 45px !important;
+    font-size: 16px; /* Evita zoom en iOS */
+  }
+  
+  .phone-input::before {
+    left: 12px;
+    font-size: 16px;
+  }
+  
+  .whatsapp-instructions {
+    padding: 12px;
+    font-size: 12px;
+  }
+  
+  .whatsapp-status {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+  
+  .whatsapp-float {
+    width: 50px;
+    height: 50px;
+    bottom: 20px;
+    right: 15px;
+    font-size: 20px;
+  }
 }
 
-.whatsapp-status.error {
-  background: rgba(255, 107, 107, 0.1);
-  color: #ff6b6b;
-  border: 1px solid rgba(255, 107, 107, 0.3);
+/* Tablet adjustments */
+@media (min-width: 481px) and (max-width: 768px) {
+  .message-preview {
+    max-height: 140px;
+  }
+  
+  .whatsapp-share-button {
+    padding: 16px 18px;
+    font-size: 15px;
+  }
+  
+  .phone-input input {
+    font-size: 16px;
+  }
 }
 
-.whatsapp-status.info {
-  background: rgba(23, 162, 184, 0.1);
-  color: #17a2b8;
-  border: 1px solid rgba(23, 162, 184, 0.3);
+/* Dark mode improvements para WhatsApp */
+@media (prefers-color-scheme: dark) {
+  .message-preview {
+    background: rgba(0, 0, 0, 0.5);
+    border-left-color: #25D366;
+  }
+  
+  .whatsapp-indicator {
+    background: rgba(37, 211, 102, 0.2);
+    border-color: rgba(37, 211, 102, 0.4);
+  }
+  
+  .whatsapp-instructions {
+    background: rgba(37, 211, 102, 0.15);
+    border-color: rgba(37, 211, 102, 0.4);
+  }
+  
+  .whatsapp-status.success {
+    background: rgba(37, 211, 102, 0.2);
+  }
+  
+  .whatsapp-status.error {
+    background: rgba(255, 107, 107, 0.2);
+  }
+  
+  .whatsapp-status.info {
+    background: rgba(23, 162, 184, 0.2);
+  }
+}
+
+/* Soporte para modo de alto contraste */
+@media (prefers-contrast: high) {
+  .whatsapp-share-button {
+    border-width: 3px;
+    box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.5);
+  }
+  
+  .whatsapp-indicator {
+    border-width: 2px;
+    font-weight: 900;
+  }
+  
+  .message-preview {
+    border-left-width: 6px;
+    border: 2px solid #25D366;
+  }
+  
+  .whatsapp-instructions {
+    border-width: 2px;
+  }
+}
+
+/* Soporte para reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .whatsapp-share-button,
+  .whatsapp-indicator,
+  .message-preview,
+  .phone-input input,
+  .whatsapp-status,
+  .whatsapp-float {
+    animation: none;
+    transition: none;
+  }
+  
+  .whatsapp-loading::after {
+    animation: none;
+    border: 3px solid #fff;
+  }
 }
 
 /* Transiciones suaves para todos los elementos de WhatsApp */
@@ -269,36 +503,81 @@
 .whatsapp-indicator,
 .message-preview,
 .phone-input input,
-.whatsapp-status {
+.whatsapp-status,
+.whatsapp-instructions {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-
-.message-preview {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  max-height: 120px;
-  overflow-y: auto
-}
 /* Mejoras de accesibilidad */
 .whatsapp-share-button:focus,
 .phone-input input:focus {
-  outline: 2px solid #25D366;
+  outline: 3px solid #25D366;
   outline-offset: 2px;
 }
 
-/* Soporte para modo de alto contraste */
-@media (prefers-contrast: high) {
-  .whatsapp-share-button {
-    border-width: 3px;
-  }
-  
-  .whatsapp-indicator {
-    border-width: 2px;
-  }
-  
+.whatsapp-share-button:focus-visible {
+  box-shadow: 0 0 0 4px rgba(37, 211, 102, 0.3);
+}
+
+/* Estados de carga específicos */
+.whatsapp-share-button.loading {
+  pointer-events: none;
+  position: relative;
+}
+
+.whatsapp-share-button.loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(37, 211, 102, 0.1);
+  border-radius: 12px;
+  animation: loadingShimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingShimmer {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+/* Efectos especiales para interacciones */
+.whatsapp-share-button.success {
+  background: linear-gradient(135deg, #32CD32 0%, #228B22 100%);
+  animation: successBounce 0.6s ease-out;
+}
+
+@keyframes successBounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Personalización del placeholder */
+.phone-input input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+}
+
+.phone-input input:focus::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Mejoras para pantallas grandes */
+@media (min-width: 1200px) {
   .message-preview {
-    border-left-width: 6px;
-    max-height: 45px;
-    height: 45px;
+    max-height: 180px;
+  }
+  
+  .whatsapp-share-button {
+    padding: 18px 24px;
+    font-size: 17px;
+  }
+  
+  .whatsapp-instructions {
+    padding: 18px;
+    font-size: 14px;
   }
 }

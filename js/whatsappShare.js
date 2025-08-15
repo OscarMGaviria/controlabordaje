@@ -1,17 +1,15 @@
+// ===========================
+// MÓDULO WHATSAPP CORREGIDO
+// ===========================
+
 import { triggerHapticFeedback } from './utils/haptics.js';
 import { auth } from './firebaseConfig.js';
-
-/**
- * Módulo para compartir información de zarpes por WhatsApp
- */
 
 /**
  * Genera el mensaje formateado para WhatsApp
  * @param {Object} zarpeData - Datos del zarpe
  * @returns {string} Mensaje formateado
  */
-
-
 function generateWhatsAppMessage(zarpeData) {
     const fecha = new Date(zarpeData.fechaHora);
     const fechaFormateada = fecha.toLocaleDateString('es-CO', {
@@ -29,65 +27,120 @@ function generateWhatsAppMessage(zarpeData) {
     const operador = zarpeData.administrador || auth.currentUser?.email || 'Sistema';
     const operadorFormateado = operador.split('@')[0];
 
-    let mensaje = `*ZARPE CONFIRMADO*\n`;
-    mensaje += `*DETALLES DEL VIAJE*\n------------------------------\n`;
-    mensaje += `*Embarcación:* ${zarpeData.embarcacion}\n`;
-    mensaje += `*Posición:* ${zarpeData.posicionDesembarque}\n`;
-    mensaje += `*Categoría:* ${zarpeData.categoria}\n`;
-    mensaje += `*INFORMACIÓN DE PASAJEROS*\n------------------------------\n`;
-    mensaje += `*Pasajeros:* ${zarpeData.cantidadPasajeros} personas\n`;
-    mensaje += `*Valor Total:* $${zarpeData.valorTotal.toLocaleString('es-CO')} COP\n`;
-    mensaje += `*Valor por Persona:* $${zarpeData.valorPorPersona.toLocaleString('es-CO')} COP\n`;
-    mensaje += `*INFORMACIÓN DEL ZARPE*\n------------------------------\n`;
-    mensaje += `*Fecha:* ${fechaFormateada}\n`;
-    mensaje += `*Hora:* ${horaFormateada}\n`;
-    mensaje += `*Operador:* ${operadorFormateado}\n`;
+    let mensaje = `🚢 *ZARPE CONFIRMADO* 🚢\n\n`;
+    mensaje += `📋 *DETALLES DEL VIAJE*\n`;
+    mensaje += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    mensaje += `⛵ *Embarcación:* ${zarpeData.embarcacion}\n`;
+    mensaje += `📍 *Posición:* ${zarpeData.posicionDesembarque}\n`;
+    mensaje += `🏷️ *Categoría:* ${zarpeData.categoria}\n\n`;
+    mensaje += `👥 *INFORMACIÓN DE PASAJEROS*\n`;
+    mensaje += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    mensaje += `👤 *Pasajeros:* ${zarpeData.cantidadPasajeros} personas\n`;
+    mensaje += `💰 *Valor Total:* $${zarpeData.valorTotal.toLocaleString('es-CO')} COP\n`;
+    mensaje += `💵 *Valor por Persona:* $${zarpeData.valorPorPersona.toLocaleString('es-CO')} COP\n\n`;
+    mensaje += `🕐 *INFORMACIÓN DEL ZARPE*\n`;
+    mensaje += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    mensaje += `📅 *Fecha:* ${fechaFormateada}\n`;
+    mensaje += `⏰ *Hora:* ${horaFormateada}\n`;
+    mensaje += `👨‍💼 *Operador:* ${operadorFormateado}\n`;
 
     if (zarpeData.statusInfo) {
-        mensaje += `\n*NOTA:* ${zarpeData.statusInfo}`;
+        mensaje += `\n⚠️ *NOTA:* ${zarpeData.statusInfo}`;
     }
 
-    mensaje += `\n---\nMensaje generado automáticamente por Admin Embarcaciones`;
+    mensaje += `\n\n🤖 _Mensaje generado automáticamente por Admin Embarcaciones_`;
+    mensaje += `\n🏝️ _Muelle Único Guatapé - Malecón San Juan del Puerto_`;
 
     return mensaje;
 }
 
-
 /**
- * Abre WhatsApp Web o la app con el mensaje pre-cargado
+ * Abre WhatsApp con el mensaje pre-cargado
  * @param {string} phoneNumber - Número de teléfono (opcional)
  * @param {string} message - Mensaje a enviar
  */
 function openWhatsApp(phoneNumber, message) {
     const encodedMessage = encodeURIComponent(message);
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-    let nativeUrl, fallbackUrl;
-
+    
+    let whatsappUrl;
+    
     if (phoneNumber && phoneNumber.trim() !== '') {
-        const cleanPhone = phoneNumber.replace(/[^\d]/g, '');
-        nativeUrl = `whatsapp://send?phone=${cleanPhone}&text=${encodedMessage}`;
-        fallbackUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+        // Limpiar número: remover espacios, guiones, paréntesis
+        let cleanPhone = phoneNumber.replace(/[\s\-\(\)\+]/g, '');
+        
+        // Si empieza con 57, agregar +
+        if (cleanPhone.startsWith('57') && cleanPhone.length > 10) {
+            cleanPhone = '+' + cleanPhone;
+        }
+        // Si no tiene código de país, agregar +57
+        else if (!cleanPhone.startsWith('+') && cleanPhone.length === 10) {
+            cleanPhone = '+57' + cleanPhone;
+        }
+        // Si ya tiene +, mantenerlo
+        else if (cleanPhone.startsWith('+')) {
+            // Ya está bien formateado
+        }
+        
+        console.log('📱 Número limpio:', cleanPhone);
+        
+        if (isMobile) {
+            // Para móviles: intentar app nativa primero
+            whatsappUrl = `whatsapp://send?phone=${cleanPhone}&text=${encodedMessage}`;
+        } else {
+            // Para desktop: directo a WhatsApp Web
+            whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+        }
     } else {
-        nativeUrl = `whatsapp://send?text=${encodedMessage}`;
-        fallbackUrl = `https://wa.me/?text=${encodedMessage}`;
+        // Sin número específico - abrir WhatsApp para seleccionar contacto
+        if (isMobile) {
+            whatsappUrl = `whatsapp://send?text=${encodedMessage}`;
+        } else {
+            whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+        }
     }
-
+    
+    console.log('🔗 URL WhatsApp:', whatsappUrl);
+    
     if (isMobile) {
-        // Abrir app de WhatsApp
-        window.location.href = nativeUrl;
-
-        // Fallback a WhatsApp Web si no abre
-        setTimeout(() => {
-            window.open(fallbackUrl, '_blank');
-        }, 2000);
+        // En móviles: intentar app nativa, fallback a web
+        try {
+            // Crear un enlace temporal y hacer click
+            const link = document.createElement('a');
+            link.href = whatsappUrl;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            
+            // Agregar al DOM temporalmente
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Fallback a WhatsApp Web después de 2 segundos si no abre
+            setTimeout(() => {
+                const webUrl = phoneNumber && phoneNumber.trim() ? 
+                    `https://wa.me/${phoneNumber.replace(/[\s\-\(\)\+]/g, '')}?text=${encodedMessage}` :
+                    `https://wa.me/?text=${encodedMessage}`;
+                    
+                // Solo abrir web si la ventana actual sigue enfocada (significa que no abrió la app)
+                if (document.hasFocus()) {
+                    window.open(webUrl, '_blank', 'noopener,noreferrer');
+                }
+            }, 2000);
+            
+        } catch (error) {
+            console.error('❌ Error abriendo WhatsApp app:', error);
+            // Fallback directo a web
+            const webUrl = phoneNumber && phoneNumber.trim() ? 
+                `https://wa.me/${phoneNumber.replace(/[\s\-\(\)\+]/g, '')}?text=${encodedMessage}` :
+                `https://wa.me/?text=${encodedMessage}`;
+            window.open(webUrl, '_blank', 'noopener,noreferrer');
+        }
     } else {
-        // Desktop: solo WhatsApp Web
-        window.open(fallbackUrl, '_blank');
+        // En desktop: directo a WhatsApp Web
+        window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
     }
 }
-
-
 
 /**
  * Muestra el modal de compartir WhatsApp
@@ -112,7 +165,7 @@ export function showWhatsAppShareModal(zarpeData) {
             <div class="modal-header">
                 <div class="modal-title" style="color: ${statusColor};">
                     <i class="fab fa-whatsapp"></i>
-                    WhatsApp
+                    Compartir por WhatsApp
                 </div>
                 <button class="modal-close" id="whatsappModalClose">
                     <i class="fas fa-times"></i>
@@ -140,7 +193,7 @@ export function showWhatsAppShareModal(zarpeData) {
                         <input type="tel" 
                                id="whatsappPhone" 
                                class="modal-input touch-target" 
-                               placeholder="Ej: 300 123 4567" 
+                               placeholder="Ej: 300 123 4567 o +57 300 123 4567" 
                                style="text-align: left;">
                     </div>
                     <small style="color: rgba(255, 255, 255, 0.7); font-size: 12px; margin-top: 5px; display: block;">
@@ -156,6 +209,17 @@ export function showWhatsAppShareModal(zarpeData) {
                         <pre id="messagePreview">${message}</pre>
                     </div>
                 </div>
+
+                <div class="warning-message" style="background: rgba(37, 211, 102, 0.2); border-color: rgba(37, 211, 102, 0.5); color: #25D366; margin-top: 15px;">
+                    <i class="fab fa-whatsapp"></i>
+                    <div>
+                        <strong>Instrucciones:</strong><br>
+                        • Con número: Se abrirá chat directo<br>
+                        • Sin número: Podrás elegir contacto<br>
+                        • En móviles: Abre la app de WhatsApp<br>
+                        • En PC: Abre WhatsApp Web
+                    </div>
+                </div>
             </div>
 
             <div class="modal-actions">
@@ -163,7 +227,7 @@ export function showWhatsAppShareModal(zarpeData) {
                     <i class="fas fa-times"></i> Cancelar
                 </button>
                 <button class="modal-button whatsapp-share-button touch-target" id="whatsappBtnCompartir">
-                    <i class="fab fa-whatsapp"></i> Compartir
+                    <i class="fab fa-whatsapp"></i> Abrir WhatsApp
                 </button>
             </div>
         </div>
@@ -185,9 +249,38 @@ export function showWhatsAppShareModal(zarpeData) {
     document.getElementById('whatsappModalClose').addEventListener('click', closeModal);
     document.getElementById('whatsappBtnCancelar').addEventListener('click', closeModal);
     
+    // Formatear número mientras se escribe
+    phoneInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/[^\d]/g, '');
+        
+        // Formatear para Colombia (10 dígitos después del 57)
+        if (value.length > 0) {
+            if (value.startsWith('57') && value.length > 2) {
+                // Si empieza con 57, formatear como +57 XXX XXX XXXX
+                const withoutCountry = value.substring(2);
+                if (withoutCountry.length <= 3) {
+                    e.target.value = `+57 ${withoutCountry}`;
+                } else if (withoutCountry.length <= 6) {
+                    e.target.value = `+57 ${withoutCountry.substring(0, 3)} ${withoutCountry.substring(3)}`;
+                } else {
+                    e.target.value = `+57 ${withoutCountry.substring(0, 3)} ${withoutCountry.substring(3, 6)} ${withoutCountry.substring(6, 10)}`;
+                }
+            } else {
+                // Número local de 10 dígitos
+                if (value.length <= 3) {
+                    e.target.value = value;
+                } else if (value.length <= 6) {
+                    e.target.value = `${value.substring(0, 3)} ${value.substring(3)}`;
+                } else {
+                    e.target.value = `${value.substring(0, 3)} ${value.substring(3, 6)} ${value.substring(6, 10)}`;
+                }
+            }
+        }
+    });
+    
     // Compartir por WhatsApp
     compartirBtn.addEventListener('click', () => {
-        const phoneNumber = phoneInput.value.trim();
+        let phoneNumber = phoneInput.value.trim();
         
         compartirBtn.disabled = true;
         compartirBtn.innerHTML = '<div class="whatsapp-loading"><i class="fab fa-whatsapp"></i> Abriendo WhatsApp...</div>';
@@ -195,23 +288,26 @@ export function showWhatsAppShareModal(zarpeData) {
         triggerHapticFeedback('success');
         
         try {
+            console.log('📞 Número ingresado:', phoneNumber);
             openWhatsApp(phoneNumber, message);
             
-            // Mostrar mensaje de éxito
+            // Mostrar mensaje de éxito después de intentar abrir
             setTimeout(() => {
                 closeModal();
                 
-                // Disparar evento de éxito
                 window.dispatchEvent(new CustomEvent('showSuccess', {
                     detail: {
                         title: '📱 WhatsApp Abierto',
-                        message: 'El mensaje ha sido cargado en WhatsApp. Selecciona el contacto y envía.',
+                        message: phoneNumber ? 
+                            'Se abrió el chat con el número especificado' : 
+                            'Selecciona el contacto y envía el mensaje',
                         duration: 4000
                     }
                 }));
             }, 1500);
             
         } catch (error) {
+            console.error('❌ Error al abrir WhatsApp:', error);
             triggerHapticFeedback('error');
             
             window.dispatchEvent(new CustomEvent('showError', {
@@ -223,7 +319,7 @@ export function showWhatsAppShareModal(zarpeData) {
             }));
             
             compartirBtn.disabled = false;
-            compartirBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Compartir';
+            compartirBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Abrir WhatsApp';
         }
     });
     
@@ -252,39 +348,10 @@ export function showWhatsAppShareModal(zarpeData) {
     setTimeout(() => {
         phoneInput.focus();
     }, 300);
-    
-    // Formatear número de teléfono mientras se escribe
-    phoneInput.addEventListener('input', (e) => {
-        let value = e.target.value.replace(/[^\d]/g, '');
-        
-        // Formatear número colombiano
-        if (value.startsWith('57')) {
-            value = value.substring(2);
-        }
-        
-        if (value.length > 0) {
-            if (value.length <= 3) {
-                e.target.value = `${value}`;
-            } else if (value.length <= 6) {
-                e.target.value = `${value.substring(0, 3)} ${value.substring(3)}`;
-            } else {
-                e.target.value = `${value.substring(0, 3)} ${value.substring(3, 6)} ${value.substring(6, 10)}`;
-            }
-        }
-    });
-    
-    // Agregar prefijo +57 al enviar si no está presente
-    compartirBtn.addEventListener('click', () => {
-        let phone = phoneInput.value.trim();
-        if (phone && !phone.startsWith('+57') && !phone.startsWith('57')) {
-            phone = '+57' + phone.replace(/\s/g, '');
-        }
-        phoneInput.value = phone;
-    });
 }
 
 /**
- * Función rápida para compartir sin modal (opcional)
+ * Función rápida para compartir sin modal
  * @param {Object} zarpeData - Datos del zarpe
  * @param {string} phoneNumber - Número de teléfono directo
  */
@@ -318,12 +385,11 @@ export function quickWhatsAppShare(zarpeData, phoneNumber = '') {
 }
 
 /**
- * Verificar si WhatsApp está disponible en el dispositivo
+ * Verificar si WhatsApp está disponible
  * @returns {boolean} True si WhatsApp está disponible
  */
 export function isWhatsAppAvailable() {
-    // En la práctica, WhatsApp Web está disponible en todos los navegadores modernos
-    // y la mayoría de móviles tienen WhatsApp instalado
+    // WhatsApp Web está disponible en todos los navegadores modernos
     return true;
 }
 
@@ -344,7 +410,7 @@ export function getWhatsAppButtonText() {
 }
 
 /**
- * Función para mostrar indicador de conexión en el mensaje
+ * Función para agregar status de conexión al mensaje
  * @param {Object} zarpeData - Datos del zarpe
  * @param {boolean} hasConnectionIssues - Si hay problemas de conexión
  * @returns {Object} Datos del zarpe con información de status
@@ -353,7 +419,7 @@ export function addConnectionStatus(zarpeData, hasConnectionIssues = false) {
     if (hasConnectionIssues) {
         return {
             ...zarpeData,
-            statusInfo: '\n⚠️ *NOTA:* Información generada localmente debido a problemas de conexión con el servidor.'
+            statusInfo: 'Información generada localmente debido a problemas de conexión con el servidor.'
         };
     }
     return zarpeData;
