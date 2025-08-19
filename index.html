@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1e3c72">
+    <title>Admin Embarcaciones</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS Modular -->
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/admin.css" id="admin-styles" disabled>
+    <link rel="stylesheet" href="./css/operador.css" id="operador-styles" disabled>
+</head>
+<body>
+    <!-- Contenedor Principal -->
+    <div id="app"></div>
+    
+    <!-- Contenedor de Modales -->
+    <div id="modals"></div>
+    
+    <!-- Contenedor de Alertas -->
+    <div id="alerts"></div>
+
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDdjYoi4BSBFFAuXumLxj-NMQWUVSFdSv4",
+            authDomain: "contratos-5e932.firebaseapp.com",
+            projectId: "contratos-5e932",
+            storageBucket: "contratos-5e932.firebasestorage.app", 
+            messagingSenderId: "945849105278",
+            appId: "1:945849105278:web:f0291a411b8e33327a112f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        window.firebaseAuth = getAuth(app);
+        window.firebaseDB = getFirestore(app);
+    </script>
+
+    <!-- Módulos JS -->
+    <script type="module" src="./js/config.js"></script>
+    <script type="module" src="./js/utils.js"></script>
+    <script type="module" src="./js/auth.js"></script>
+    <script type="module" src="./js/database.js"></script>
+    <script type="module" src="./js/ui.js"></script>
+    <script type="module" src="./js/embarcaciones.js"></script>
+    <script type="module" src="./js/modals.js"></script>
+    <script type="module" src="./js/main.js"></script>
+</body>
+</html>
